@@ -73,8 +73,8 @@ class ilCleanUpSessionsPlugin extends ilCronHookPlugin {
 	 * AfterUninstall deletes the tables from the DB
 	 */
 	protected function afterUninstall() {
-		global $DIC;
-		$this->access = new CleanUpSessionsDBAccess($DIC);
+
+		$this->access = new CleanUpSessionsDBAccess();
 		$this->access->removePluginTableFromDB();
 	}
 

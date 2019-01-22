@@ -31,8 +31,9 @@ class CleanUpSessionsDBAccess {
 	 * @param null $db
 	 * @throws \Exception
 	 */
-	public function __construct($dic, $db = null) {
-		$this->DIC = $dic;
+	public function __construct( $db = null) {
+	    global $DIC;
+		$this->DIC = $DIC;
 		$this->logger = new Logger("CleanUpSessionsDBAccess");
 		$this->logger->pushHandler(new StreamHandler(ilCleanUpSessionsPlugin::LOG_DESTINATION), Logger::DEBUG);
 		if($db == null) {
@@ -70,7 +71,7 @@ class CleanUpSessionsDBAccess {
 	 */
 	public function expiredAnonymousUsers() {
 		$thresholdBoundary = $this->getExpirationValue();
-		$sql = "SELECT * FROM usr_session WHERE user_id = 13 AND createtime < %s";
+		$sql = "SELECT * FROM usr_session WHERE user_id = 13 AND ctime < %s";
 		$set = $this->db->queryF($sql, ['integer'], [$thresholdBoundary]);
 
 		$counter = 1;
@@ -104,7 +105,7 @@ class CleanUpSessionsDBAccess {
 
 		$all = $this->allAnonymousSessions();
 
-		$sql = "DELETE FROM usr_session WHERE user_id = 13 AND createtime < %s";
+		$sql = "DELETE FROM usr_session WHERE user_id = 13 AND ctime < %s";
 		$this->db->manipulateF($sql, ['integer'], [$this->getThresholdBoundary()]);
 
 		$after = $this->allAnonymousSessions();

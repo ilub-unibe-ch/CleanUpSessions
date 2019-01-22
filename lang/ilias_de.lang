@@ -7,9 +7,9 @@ button_save#:#Speichern
 button_cancel#:#Abbrechen
 cron_crnhk_tcron_msg_successfully_saved#:#Erfolgreich gespeichert
 cron_crnhk_tcron_tab_plugin_config#:#Grundeinstellung
-expiration_threshold#:#Expiration Threshold (in minutes) after which an anonymous user will be deleted
-expiration_info#:#Default is set to 240 minutes.
-msg_successfully_saved#:#The expiration value has successfully been updated.
-msg_failed_save#:#The expiration value has not been saved.
-msg_not_valid_expiration_input#:#Your input is not valid. Please enter a positive integer.
-tab_plugin_config#:#Expiration Config
+expiration_threshold#:#Ablaufs Threshold (in Minuten), nach welchem anonyme User-Sessions gelöscht werden
+expiration_info#:#per default 240 Minuten
+msg_successfully_saved#:#Der Wert wurde erfolgreich aktualisiert
+msg_failed_save#:#Der Wert wurde nicht gespeichert
+msg_not_valid_expiration_input#:#Ihr Input ist nicht valide. Bitte geben Sie ein ganze, positive Zahl ein.
+tab_plugin_config#:#Ablaufs-Konfiguration
