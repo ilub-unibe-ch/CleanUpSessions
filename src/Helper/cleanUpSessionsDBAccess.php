@@ -8,7 +8,7 @@ use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
 
-class CleanUpSessionsDBAccess {
+class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface{
 	/**
 	 * @var ilDB
 	 */
@@ -121,7 +121,7 @@ class CleanUpSessionsDBAccess {
 	 *
 	 * @return float|int
 	 */
-	private function getThresholdBoundary() {
+	public function getThresholdBoundary() {
 		$currentTime = time();
 		$expirationThreshold = $this->getExpirationValue();
 		return $currentTime - $expirationThreshold * 60;

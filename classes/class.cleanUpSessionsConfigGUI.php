@@ -51,7 +51,7 @@ class cleanUpSessionsConfigGUI extends cleanUpSessionsMainGUI {
 	 * @throws Exception
 	 */
 	protected function checkAndUpdate($expiration_value) {
-		$this->access = new CleanUpSessionsDBAccess($this->DIC);
+		$this->access = new CleanUpSessionsDBAccess();
 		if (is_numeric($expiration_value) && (int)$expiration_value > 0) {
 			$this->access->updateExpirationValue($expiration_value);
 			ilUtil::sendSuccess($this->pl->txt('msg_successfully_saved'), true);
