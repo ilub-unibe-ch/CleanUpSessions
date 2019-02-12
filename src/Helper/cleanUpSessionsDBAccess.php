@@ -31,11 +31,15 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface{
 	 * @param null $db
 	 * @throws \Exception
 	 */
-	public function __construct( $db = null) {
-	    global $DIC;
-		$this->DIC = $DIC;
-		$this->logger = new Logger("CleanUpSessionsDBAccess");
-		$this->logger->pushHandler(new StreamHandler(ilCleanUpSessionsPlugin::LOG_DESTINATION), Logger::DEBUG);
+	public function __construct( $dic_param =null,$db = null) {
+		$this->logger = $this->getLogger("CleanUpSessionsDBAccess");
+		$this->logger->pushHandler($this->getStreamHandler(ilCleanUpSessionsPlugin::LOG_DESTINATION), Logger::DEBUG);
+        if($dic_param == null) {
+            global $DIC;
+            $this->DIC = $DIC;
+        } else {
+            $this->DIC = $dic_param;
+        }
 		if($db == null) {
 			$this->db = $this->DIC->database();
 		} else {
@@ -54,7 +58,7 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface{
 
 		$sql = "SELECT * FROM usr_session WHERE user_id = 13";
 		$query = $this->db->query($sql);
-		$counter = 1;
+		$counter = 0;
 		while ($rec = $this->db->fetchAssoc($query)) {
 			$msg = '#' . $counter++ . '  id: ' . $rec['user_id'] . ' valid till: ' . date('Y-m-d - H:i:s', $rec['expires']) . "\n";
 			$this->logger->info($msg);
@@ -74,7 +78,7 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface{
 		$sql = "SELECT * FROM usr_session WHERE user_id = 13 AND ctime < %s";
 		$set = $this->db->queryF($sql, ['integer'], [$thresholdBoundary]);
 
-		$counter = 1;
+		$counter = 0;
 		while ($rec = $this->db->fetchAssoc($set)) {
 			$msg = 'Expired Users -> #' . $counter++ . '  id: ' . $rec['user_id'] . ' valid till: ' .
 				date('Y-m-d - H:i:s', $rec['expires']) . "\n";
@@ -145,4 +149,20 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface{
 		$sql = "DROP TABLE " . ilCleanUpSessionsPlugin::TABLE_NAME;
 		$this->db->query($sql);
 	}
+
+    /**
+     * @param $logDestination
+     * @return StreamHandler
+     */
+    public function getStreamHandler($logDestination){
+        return new StreamHandler($logDestination);
+    }
+
+    /**
+     * @param $name
+     * @return Logger
+     */
+    public function getLogger($name){
+        return new Logger($name);
+    }
 }

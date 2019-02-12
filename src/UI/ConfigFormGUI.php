@@ -48,7 +48,7 @@ class ConfigFormGUI extends ilPropertyFormGUI {
 	public function __construct($parent_gui, $dic) {
 		$this->DIC = $dic;
 		$this->parent_gui = $parent_gui;
-		$this->access = new CleanUpSessionsDBAccess();
+		$this->access = new CleanUpSessionsDBAccess($this->DIC);
 		$this->pl = ilCleanUpSessionsPlugin::getInstance();
 		$this->setFormAction($this->DIC->ctrl()->getFormAction($this->parent_gui));
 		$this->initForm();
