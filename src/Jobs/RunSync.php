@@ -63,20 +63,17 @@ class RunSync extends AbstractJob {
 		return 1;
 	}
 
-	public function getLogger(String $name){
-	    return new Logger($name);
-    }
-
-    public function getStreamHandler($logDestination){
-
-	    return new StreamHandler($logDestination);
-    }
-
-
+    /**
+     * @return \ilCronJobResult
+     */
     public function getJobResult(){
 	    return new \ilCronJobResult();
     }
 
+    /**
+     * @return CleanUpSessionsDBAccess
+     * @throws Exception
+     */
     public function getDBAccess(){
 	    return new CleanUpSessionsDBAccess();
     }
@@ -85,18 +82,12 @@ class RunSync extends AbstractJob {
 	 * @throws
 	 */
 	public function run() {
-		$this->logger = $this->getLogger("CronSyncLogger");
 
-
-
-		$this->logger->pushHandler($this->getStreamHandler(ilCleanUpSessionsPlugin::LOG_DESTINATION), Logger::DEBUG);
 		$jobResult = $this->getJobResult();
 
-		$this->logger->info("Rsync::run() \n");
 		try {
 
 			$tc = $this->getDBAccess();
-			$tc->allAnonymousSessions();
 			$tc->removeAnonymousSessionsOlderThanExpirationThreshold();
 
 			$jobResult->setStatus($jobResult::STATUS_OK);
