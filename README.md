@@ -6,7 +6,7 @@ Start at your ILIAS root directory
 ```
 mkdir -p Customizing/global/plugins/Services/Cron/CronHook
 cd Customizing/global/plugins/Services/Cron/CronHook
-git clone git@github.com:tomaszkolonko/CleanUpSessions.git
+git clone git@github.com:okaufman/CleanUpSessions.git
 ```
 
 ### Install dependencies via composer
