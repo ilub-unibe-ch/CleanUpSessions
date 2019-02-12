@@ -7,7 +7,7 @@ use ilCleanUpSessionsConfigGUI;
 use ilCleanUpSessionsPlugin;
 use ilPropertyFormGUI;
 use ilTextInputGUI;
-use iLUB\Plugins\CleanUpSessions\Helper\CleanUpSessionsDBAccess;
+use iLUB\Plugins\CleanUpSessions\Helper\cleanUpSessionsDBAccess;
 
 /**
  * Class ConfigFOrmGUI
@@ -29,7 +29,7 @@ class ConfigFormGUI extends ilPropertyFormGUI {
 	 */
 	protected $pl;
 	/**
-	 * @var CleanUpSessionsDBAccess
+	 * @var cleanUpSessionsDBAccess
 	 */
 	protected $access;
 	/**

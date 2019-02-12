@@ -8,7 +8,7 @@ use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
 
-class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface{
+class cleanUpSessionsDBAccess implements cleanUpSessionsDBInterface{
 	/**
 	 * @var ilDB
 	 */

@@ -3,7 +3,7 @@
 require_once __DIR__ . "/../vendor/autoload.php";
 
 use iLUB\Plugins\CleanUpSessions\UI\ConfigFormGUI;
-use iLUB\Plugins\CleanUpSessions\Helper\CleanUpSessionsDBAccess;
+use iLUB\Plugins\CleanUpSessions\Helper\cleanUpSessionsDBAccess;
 
 
 /**
@@ -51,7 +51,7 @@ class cleanUpSessionsConfigGUI extends cleanUpSessionsMainGUI {
 	 * @throws Exception
 	 */
 	protected function checkAndUpdate($expiration_value) {
-		$this->access = new CleanUpSessionsDBAccess($this->DIC);
+		$this->access = new cleanUpSessionsDBAccess($this->DIC);
 		if (is_numeric($expiration_value) && (int)$expiration_value > 0) {
 			$this->access->updateExpirationValue($expiration_value);
 			ilUtil::sendSuccess($this->pl->txt('msg_successfully_saved'), true);

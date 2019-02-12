@@ -4,7 +4,7 @@ namespace iLUB\Plugins\CleanUpSessions\Jobs;
 
 use Exception;
 use ilCronJob;
-use iLUB\Plugins\CleanUpSessions\Helper\CleanUpSessionsDBAccess;
+use iLUB\Plugins\CleanUpSessions\Helper\cleanUpSessionsDBAccess;
 use ilCleanUpSessionsPlugin;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
@@ -71,11 +71,11 @@ class RunSync extends AbstractJob {
     }
 
     /**
-     * @return CleanUpSessionsDBAccess
+     * @return cleanUpSessionsDBAccess
      * @throws Exception
      */
     public function getDBAccess(){
-	    return new CleanUpSessionsDBAccess();
+	    return new cleanUpSessionsDBAccess();
     }
 	/**
 	 * @return \ilCronJobResult
