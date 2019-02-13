@@ -11,7 +11,7 @@ namespace iLUB\Plugins\CleanUpSessions\Helper;
 
 
 
-interface CleanUpSessionsDBInterface {
+interface cleanUpSessionsDBInterface {
     //All methods declared in an interface must be public
 
     /**

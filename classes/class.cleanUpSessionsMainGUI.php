@@ -42,10 +42,6 @@ class cleanUpSessionsMainGUI {
 		global $DIC;
 		$this->DIC = $DIC;
 		$this->pl = ilCleanUpSessionsPlugin::getInstance();
-
-		$this->logger = new Logger("CleanUpSessionsMainGUI");
-		$this->logger->pushHandler(new StreamHandler(ilCleanUpSessionsPlugin::LOG_DESTINATION), Logger::DEBUG);
-		$this->logger->info("Logger has been registered");
 	}
 
 
@@ -53,7 +49,6 @@ class cleanUpSessionsMainGUI {
 	 * @throws ilCtrlException
 	 */
 	public function executeCommand() {
-		$this->logger->info("executeCommand()");
 		$this->initTabs();
 		$nextClass = $this->DIC->ctrl()->getNextClass();
 		switch ($nextClass) {

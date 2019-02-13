@@ -7,7 +7,7 @@ use ilCleanUpSessionsConfigGUI;
 use ilCleanUpSessionsPlugin;
 use ilPropertyFormGUI;
 use ilTextInputGUI;
-use iLUB\Plugins\CleanUpSessions\Helper\CleanUpSessionsDBAccess;
+use iLUB\Plugins\CleanUpSessions\Helper\cleanUpSessionsDBAccess;
 
 /**
  * Class ConfigFOrmGUI
@@ -29,7 +29,7 @@ class ConfigFormGUI extends ilPropertyFormGUI {
 	 */
 	protected $pl;
 	/**
-	 * @var CleanUpSessionsDBAccess
+	 * @var cleanUpSessionsDBAccess
 	 */
 	protected $access;
 	/**
@@ -48,7 +48,7 @@ class ConfigFormGUI extends ilPropertyFormGUI {
 	public function __construct($parent_gui, $dic) {
 		$this->DIC = $dic;
 		$this->parent_gui = $parent_gui;
-		$this->access = new CleanUpSessionsDBAccess($this->DIC);
+		$this->access = new cleanUpSessionsDBAccess($this->DIC);
 		$this->pl = ilCleanUpSessionsPlugin::getInstance();
 		$this->setFormAction($this->DIC->ctrl()->getFormAction($this->parent_gui));
 		$this->initForm();

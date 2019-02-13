@@ -2,7 +2,7 @@
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
-use iLUB\Plugins\CleanUpSessions\Helper\CleanUpSessionsDBAccess;
+use iLUB\Plugins\CleanUpSessions\Helper\cleanUpSessionsDBAccess;
 use iLUB\Plugins\CleanUpSessions\Jobs\RunSync;
 
 /**
@@ -73,7 +73,7 @@ class ilCleanUpSessionsPlugin extends ilCronHookPlugin {
 	 * AfterUninstall deletes the tables from the DB
 	 */
 	protected function afterUninstall() {
-		$this->access = new CleanUpSessionsDBAccess();
+		$this->access = new cleanUpSessionsDBAccess();
 		$this->access->removePluginTableFromDB();
 	}
 
