@@ -1,0 +1,17 @@
+{
+  "require-dev": {
+    "phpunit/phpunit": "^6.5",
+    "monolog/monolog": "1.23.*",
+    "mockery/mockery": "dev-master"
+  },
+  "autoload": {
+    "psr-4": {
+      "iLUB\\Plugins\\CleanUpSessions\\": "src/"
+    },
+    "classmap": [
+      "classes",
+      "../../../../../../../Services/ActiveRecord",
+      "../../../../../../../Services/Cron"
+    ]
+  }
+}

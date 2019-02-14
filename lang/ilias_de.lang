@@ -1,0 +1,15 @@
+admin_form_button_cancel#:#Abbrechen
+admin_form_button_save#:#Speichern
+admin_form_title#:#Allgemein
+first_variable#:#Erste(s)
+second_variable#:#Zweite(s)
+button_save#:#Speichern
+button_cancel#:#Abbrechen
+cron_crnhk_tcron_msg_successfully_saved#:#Erfolgreich gespeichert
+cron_crnhk_tcron_tab_plugin_config#:#Grundeinstellung
+expiration_threshold#:#Ablaufs Threshold (in Minuten), nach welchem anonyme User-Sessions gelöscht werden
+expiration_info#:#per default 240 Minuten
+msg_successfully_saved#:#Der Wert wurde erfolgreich aktualisiert
+msg_failed_save#:#Der Wert wurde nicht gespeichert
+msg_not_valid_expiration_input#:#Ihr Input ist nicht valide. Bitte geben Sie ein ganze, positive Zahl ein.
+tab_plugin_config#:#Ablaufs-Konfiguration
