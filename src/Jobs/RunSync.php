@@ -17,12 +17,35 @@ use Monolog\Handler\StreamHandler;
  */
 class RunSync extends AbstractJob {
 
-	/**
-	 * @var logger
-	 */
-	protected $logger;
 
+    /**
+     * @var
+     */
 	protected $dic;
+
+    /**
+     * @var \ilCronJobResult
+     */
+	protected $job_result;
+	protected $db_access;
+
+
+    /**
+     * RunSync constructor.
+     * @param \ilCronJobResult|null $dic_param
+     * Dieses wird ausgeführt, wenn im GUI die Cron-Jobs angezeigt werden.
+     */
+    public function __construct(\ilCronJobResult $job_result =null, cleanUpSessionsDBAccess $db_access=null) {
+        $this->job_result = $job_result;
+        if($this->job_result == null){
+            $this->job_result = new \ilCronJobResult();
+        }
+        $this->db_access = $db_access;
+        if($this->db_access == null){
+            $this->db_access = new cleanUpSessionsDBAccess();
+        }
+    }
+
 
 	/**
 	 * @return string
@@ -67,15 +90,17 @@ class RunSync extends AbstractJob {
      * @return \ilCronJobResult
      */
     public function getJobResult(){
-	    return new \ilCronJobResult();
+
+	    return $this->job_result;
+
     }
 
     /**
-     * @return CleanUpSessionsDBAccess
-     * @throws Exception
+     * @return cleanUpSessionsDBAccess
      */
     public function getDBAccess(){
-	    return new CleanUpSessionsDBAccess();
+
+	    return $this->db_access;
     }
 	/**
 	 * @return \ilCronJobResult
