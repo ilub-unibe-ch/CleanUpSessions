@@ -18,6 +18,7 @@ class cleanUpSessionsDBAccess implements cleanUpSessionsDBInterface{
 	 * @var logger
 	 */
 	protected $logger;
+	protected $streamHandler;
 
 	/**
 	 * @var DIC
@@ -31,19 +32,29 @@ class cleanUpSessionsDBAccess implements cleanUpSessionsDBInterface{
 	 * @param null $db
 	 * @throws \Exception
 	 */
-	public function __construct( $dic_param =null,$db = null) {
-		$this->logger = $this->getLogger("CleanUpSessionsDBAccess");
-		$this->logger->pushHandler($this->getStreamHandler(ilCleanUpSessionsPlugin::LOG_DESTINATION), Logger::DEBUG);
+	public function __construct( $dic_param =null, $db_param = null, $log_param=null, $stream_param=null) {
+	    if($log_param==null) {
+            $this->logger = new Logger("CleanUpSessionsDBAccess");
+        }else{
+	        $this->logger=$log_param;
+        }
+        if($stream_param==null) {
+            $this->streamHandler = new StreamHandler(ilCleanUpSessionsPlugin::LOG_DESTINATION);
+        }else{
+            $this->streamHandler=$stream_param;
+        }
+		$this->logger->pushHandler($this->streamHandler, Logger::DEBUG);
+
         if($dic_param == null) {
             global $DIC;
             $this->DIC = $DIC;
         } else {
             $this->DIC = $dic_param;
         }
-		if($db == null) {
+		if($db_param == null) {
 			$this->db = $this->DIC->database();
 		} else {
-			$this->db = $db;
+			$this->db = $db_param;
 		}
 	}
 
@@ -150,19 +161,20 @@ class cleanUpSessionsDBAccess implements cleanUpSessionsDBInterface{
 		$this->db->query($sql);
 	}
 
-    /**
-     * @param $logDestination
-     * @return StreamHandler
-     */
-    public function getStreamHandler($logDestination){
-        return new StreamHandler($logDestination);
-    }
 
     /**
-     * @param $name
+     * @return StreamHandler
+     */
+    public function getStreamHandler(){
+        return $this->streamHandler;
+    }
+    /**
      * @return Logger
      */
-    public function getLogger($name){
-        return new Logger($name);
+    public function getLogger(){
+        return $this->logger;
     }
+
+
+
 }
