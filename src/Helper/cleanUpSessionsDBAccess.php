@@ -8,8 +8,7 @@ use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
 
-class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
-{
+class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface {
 	/**
 	 * @var ilDB
 	 */
@@ -33,8 +32,7 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
 	 * @param null $db
 	 * @throws \Exception
 	 */
-	public function __construct($dic_param = null, $db_param = null, $log_param = null, $stream_param = null)
-	{
+	public function __construct($dic_param = null, $db_param = null, $log_param = null, $stream_param = null) {
 		if ($log_param == null) {
 			$this->logger = new Logger("CleanUpSessionsDBAccess");
 		} else {
@@ -66,8 +64,7 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
 	 *
 	 * @return int
 	 */
-	public function expiredAnonymousUsers()
-	{
+	public function expiredAnonymousUsers() {
 		$thresholdBoundary = $this->getExpirationValue();
 		$sql = "SELECT * FROM usr_session WHERE user_id = 13 AND ctime < %s";
 		$set = $this->db->queryF($sql, ['integer'], [$thresholdBoundary]);
@@ -87,8 +84,7 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
 	 *
 	 * @return mixed
 	 */
-	public function getExpirationValue()
-	{
+	public function getExpirationValue() {
 		$sql = "SELECT expiration FROM clean_ses_cron";
 		$query = $this->db->query($sql);
 		$rec = $this->db->fetchAssoc($query);
@@ -100,8 +96,7 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
 	 * Delets all the expired anonymous sessions from the DB and logs the
 	 * remaining non-expired anonymous sessions.
 	 */
-	public function removeAnonymousSessionsOlderThanExpirationThreshold()
-	{
+	public function removeAnonymousSessionsOlderThanExpirationThreshold() {
 
 		$all = $this->allAnonymousSessions();
 
@@ -121,8 +116,7 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
 	 *
 	 * @return int
 	 */
-	public function allAnonymousSessions()
-	{
+	public function allAnonymousSessions() {
 		$this->logger->info("access all anonymous users... ");
 
 		$sql = "SELECT * FROM usr_session WHERE user_id = 13";
@@ -142,8 +136,7 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
 	 *
 	 * @return float|int
 	 */
-	public function getThresholdBoundary()
-	{
+	public function getThresholdBoundary() {
 		$currentTime = time();
 		$expirationThreshold = $this->getExpirationValue();
 		return $currentTime - $expirationThreshold * 60;
@@ -154,8 +147,7 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
 	 *
 	 * @param bool $as_obj
 	 */
-	public function updateExpirationValue($expiration)
-	{
+	public function updateExpirationValue($expiration) {
 		$this->db->manipulate('UPDATE ' . ilCleanUpSessionsPlugin::TABLE_NAME . ' SET' .
 			' expiration = ' . $this->db->quote($expiration, 'integer') . ';'
 		);
@@ -164,8 +156,7 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
 	/**
 	 * Removes the table from DB after uninstall is triggered.
 	 */
-	public function removePluginTableFromDB()
-	{
+	public function removePluginTableFromDB() {
 		$sql = "DROP TABLE " . ilCleanUpSessionsPlugin::TABLE_NAME;
 		$this->db->query($sql);
 	}
@@ -174,16 +165,14 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
 	/**
 	 * @return StreamHandler
 	 */
-	public function getStreamHandler()
-	{
+	public function getStreamHandler() {
 		return $this->streamHandler;
 	}
 
 	/**
 	 * @return Logger
 	 */
-	public function getLogger()
-	{
+	public function getLogger() {
 		return $this->logger;
 	}
 

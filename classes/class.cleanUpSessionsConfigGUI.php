@@ -8,9 +8,10 @@ use iLUB\Plugins\CleanUpSessions\Helper\CleanUpSessionsDBAccess;
 
 /**
  * Class cleanUpSessionsConfigGUI
+ *
+ * This GUI is needed to adjust time interval
  */
-class cleanUpSessionsConfigGUI extends cleanUpSessionsMainGUI
-{
+class cleanUpSessionsConfigGUI extends cleanUpSessionsMainGUI {
 	const CMD_SAVE_CONFIG = 'saveConfig';
 	const CMD_CANCEL = 'cancel';
 
@@ -18,8 +19,7 @@ class cleanUpSessionsConfigGUI extends cleanUpSessionsMainGUI
 	/**
 	 * Creates a new ConfigFormGUI and sets the Content
 	 */
-	protected function index()
-	{
+	protected function index() {
 
 		$form = new ConfigFormGUI($this, $this->DIC);
 		$tpl = $this->DIC->ui()->mainTemplate();
@@ -33,8 +33,7 @@ class cleanUpSessionsConfigGUI extends cleanUpSessionsMainGUI
 	 *
 	 * @throws Exception
 	 */
-	protected function saveConfig()
-	{
+	protected function saveConfig() {
 		$form = new ConfigFormGUI($this, $this->DIC);
 		if ($form->checkInput()) {
 			$this->checkAndUpdate($form->getInput(ilCleanUpSessionsPlugin::EXPIRATION_THRESHOLD));
@@ -51,8 +50,7 @@ class cleanUpSessionsConfigGUI extends cleanUpSessionsMainGUI
 	 * @param int $expiration_value
 	 * @throws Exception
 	 */
-	protected function checkAndUpdate(int $expiration_value)
-	{
+	protected function checkAndUpdate(int $expiration_value) {
 		$access = new CleanUpSessionsDBAccess($this->DIC);
 		if (is_numeric($expiration_value) && (int)$expiration_value > 0) {
 			$access->updateExpirationValue($expiration_value);
@@ -65,8 +63,7 @@ class cleanUpSessionsConfigGUI extends cleanUpSessionsMainGUI
 	/**
 	 *
 	 */
-	protected function initTabs()
-	{
+	protected function initTabs() {
 		$this->DIC->tabs()->activateTab(self::TAB_PLUGIN_CONFIG);
 	}
 }
