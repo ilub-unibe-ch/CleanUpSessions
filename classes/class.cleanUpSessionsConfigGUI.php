@@ -9,22 +9,22 @@ use iLUB\Plugins\CleanUpSessions\Helper\CleanUpSessionsDBAccess;
 /**
  * Class cleanUpSessionsConfigGUI
  */
-class cleanUpSessionsConfigGUI extends cleanUpSessionsMainGUI {
+class cleanUpSessionsConfigGUI extends cleanUpSessionsMainGUI
+{
 	const CMD_SAVE_CONFIG = 'saveConfig';
 	const CMD_CANCEL = 'cancel';
 
-	/**
-	 * @var $access
-	 */
-	protected $access;
 
 	/**
 	 * Creates a new ConfigFormGUI and sets the Content
 	 */
-	protected function index() {
+	protected function index()
+	{
+
 		$form = new ConfigFormGUI($this, $this->DIC);
-		global $tpl;
+		$tpl = $this->DIC->ui()->mainTemplate();
 		$tpl->setContent($form->getHTML());
+
 	}
 
 
@@ -33,7 +33,8 @@ class cleanUpSessionsConfigGUI extends cleanUpSessionsMainGUI {
 	 *
 	 * @throws Exception
 	 */
-	protected function saveConfig() {
+	protected function saveConfig()
+	{
 		$form = new ConfigFormGUI($this, $this->DIC);
 		if ($form->checkInput()) {
 			$this->checkAndUpdate($form->getInput(ilCleanUpSessionsPlugin::EXPIRATION_THRESHOLD));
@@ -47,13 +48,14 @@ class cleanUpSessionsConfigGUI extends cleanUpSessionsMainGUI {
 	 * $expiration_value must be numeric and bigger than 0 for the check to pass. If check passes value gets
 	 * updated into DB
 	 *
-	 * @param $expiration_value
+	 * @param int $expiration_value
 	 * @throws Exception
 	 */
-	protected function checkAndUpdate($expiration_value) {
-		$this->access = new CleanUpSessionsDBAccess($this->DIC);
+	protected function checkAndUpdate(int $expiration_value)
+	{
+		$access = new CleanUpSessionsDBAccess($this->DIC);
 		if (is_numeric($expiration_value) && (int)$expiration_value > 0) {
-			$this->access->updateExpirationValue($expiration_value);
+			$access->updateExpirationValue($expiration_value);
 			ilUtil::sendSuccess($this->pl->txt('msg_successfully_saved'), true);
 		} else {
 			ilUtil::sendFailure($this->pl->txt('msg_not_valid_expiration_input'), true);
@@ -63,7 +65,8 @@ class cleanUpSessionsConfigGUI extends cleanUpSessionsMainGUI {
 	/**
 	 *
 	 */
-	protected function initTabs() {
+	protected function initTabs()
+	{
 		$this->DIC->tabs()->activateTab(self::TAB_PLUGIN_CONFIG);
 	}
 }
