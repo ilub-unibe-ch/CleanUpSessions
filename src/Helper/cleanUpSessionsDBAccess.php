@@ -2,6 +2,13 @@
 
 namespace iLUB\Plugins\CleanUpSessions\Helper;
 
+
+/**
+ * Class CleanUpSessionsDBAccess
+ *
+ * This class is responsible for the interaction between the database and the plugin
+ *
+ */
 use ilDB;
 use ilCleanUpSessionsPlugin;
 use Monolog\Logger;

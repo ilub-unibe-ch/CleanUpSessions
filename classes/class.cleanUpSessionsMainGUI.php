@@ -9,6 +9,7 @@ use iLUB\Plugins\CleanUpSessions\Helper\CleanUpSessionsDBAccess;
 
 /**
  * Class cleanUpSessionsMainGUI
+ *
  * This is the configuration GUI
  *
  * @package

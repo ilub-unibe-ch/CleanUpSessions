@@ -11,6 +11,7 @@ use iLUB\Plugins\CleanUpSessions\Helper\CleanUpSessionsDBAccess;
 
 /**
  * Class ConfigFOrmGUI
+ * initializes GUI
  *
  * @package iLUB\Plugins\CleanUpSessions\UI
  */

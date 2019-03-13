@@ -12,6 +12,8 @@ use Monolog\Handler\StreamHandler;
 
 /**
  * Class RunSync
+ * 
+ * This class has to run the Cron Job
  *
  * @package iLUB\Plugins\CleanUpSessions\Jobs
  */
