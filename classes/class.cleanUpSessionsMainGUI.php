@@ -15,7 +15,6 @@ use iLUB\Plugins\CleanUpSessions\Helper\CleanUpSessionsDBAccess;
  * @package
  *
  * @ilCtrl_IsCalledBy cleanUpSessionsMainGUI: ilCleanUpSessionsConfigGUI, ilObjComponentSettingsGUI
- * @ilCtrl_calls      cleanUpSessionsMainGUI: cleanUpSessionsConfigGUI
  */
 class cleanUpSessionsMainGUI {
 	const TAB_PLUGIN_CONFIG = 'tab_plugin_config';
