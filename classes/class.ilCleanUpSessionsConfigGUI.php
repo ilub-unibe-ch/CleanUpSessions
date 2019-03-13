@@ -5,6 +5,8 @@ require_once __DIR__ . "/../vendor/autoload.php";
 /**
  * Class ilCleanUpSessionsConfigGUI
  *
+ * This GUI redirects commands to the cleanUpSessionsMainGUI
+ *
  */
 class ilCleanUpSessionsConfigGUI extends ilPluginConfigGUI {
 	/**
@@ -17,7 +19,7 @@ class ilCleanUpSessionsConfigGUI extends ilPluginConfigGUI {
 		parent::executeCommand();
 		switch ($DIC->ctrl()->getNextClass()) {
 			case strtolower(cleanUpSessionsMainGUI::class):
-				$mainGUI = new cleanUpSessionsMainGUI();
+				$mainGUI = new cleanUpSessionsMainGUI($DIC);
 				$DIC->ctrl()->forwardCommand($mainGUI);
 				return;
 		}

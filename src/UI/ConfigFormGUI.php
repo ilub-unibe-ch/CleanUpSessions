@@ -2,7 +2,7 @@
 
 namespace iLUB\Plugins\CleanUpSessions\UI;
 
-use CleanUpSessionsConfigGUI;
+use CleanUpSessionsMainGUI;
 use ilCleanUpSessionsConfigGUI;
 use ilCleanUpSessionsPlugin;
 use ilPropertyFormGUI;
@@ -52,8 +52,8 @@ class ConfigFormGUI extends ilPropertyFormGUI {
 		$this->pl = ilCleanUpSessionsPlugin::getInstance();
 		$this->setFormAction($this->DIC->ctrl()->getFormAction($this->parent_gui));
 		$this->initForm();
-		$this->addCommandButton(cleanUpSessionsConfigGUI::CMD_SAVE_CONFIG, $this->pl->txt('button_save'));
-		$this->addCommandButton(cleanUpSessionsConfigGUI::CMD_CANCEL, $this->pl->txt('button_cancel'));
+		$this->addCommandButton(cleanUpSessionsMainGUI::CMD_SAVE_CONFIG, $this->pl->txt('button_save'));
+		$this->addCommandButton(cleanUpSessionsMainGUI::CMD_CANCEL, $this->pl->txt('button_cancel'));
 		parent::__construct();
 	}
 

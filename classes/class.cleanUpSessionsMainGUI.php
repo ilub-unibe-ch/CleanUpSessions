@@ -2,11 +2,14 @@
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
-use Monolog\Logger;
+
 use Monolog\Handler\StreamHandler;
+use iLUB\Plugins\CleanUpSessions\UI\ConfigFormGUI;
+use iLUB\Plugins\CleanUpSessions\Helper\CleanUpSessionsDBAccess;
 
 /**
  * Class cleanUpSessionsMainGUI
+ * This is the configuration GUI
  *
  * @package
  *
@@ -15,18 +18,15 @@ use Monolog\Handler\StreamHandler;
  */
 class cleanUpSessionsMainGUI {
 	const TAB_PLUGIN_CONFIG = 'tab_plugin_config';
-	// const TAB_ORIGINS = 'tab_origins';
+
 	const CMD_INDEX = 'index';
+	const CMD_SAVE_CONFIG = 'saveConfig';
+	const CMD_CANCEL = 'cancel';
 
 	/**
 	 * @var ilCleanUpSessionsPlugin
 	 */
 	protected $pl;
-
-	/**
-	 * @var logger
-	 */
-	protected $logger;
 
 	/**
 	 * @var $DIC
@@ -38,14 +38,9 @@ class cleanUpSessionsMainGUI {
 	 * cleanUpSessionsMainGUI constructor.
 	 * @throws Exception
 	 */
-	public function __construct() {
-		global $DIC;
-		$this->DIC = $DIC;
+	public function __construct($DIC_param) {
+		$this->DIC = $DIC_param;
 		$this->pl = ilCleanUpSessionsPlugin::getInstance();
-
-		$this->logger = new Logger("CleanUpSessionsMainGUI");
-		$this->logger->pushHandler(new StreamHandler(ilCleanUpSessionsPlugin::LOG_DESTINATION), Logger::DEBUG);
-		$this->logger->info("Logger has been registered");
 	}
 
 
@@ -53,12 +48,11 @@ class cleanUpSessionsMainGUI {
 	 * @throws ilCtrlException
 	 */
 	public function executeCommand() {
-		$this->logger->info("executeCommand()");
 		$this->initTabs();
 		$nextClass = $this->DIC->ctrl()->getNextClass();
 		switch ($nextClass) {
-			case strtolower(cleanUpSessionsConfigGUI::class):
-				$this->DIC->ctrl()->forwardCommand(new cleanUpSessionsConfigGUI());
+			case strtolower(ilCleanUpSessionsConfigGUI::class):
+				$this->DIC->ctrl()->forwardCommand(new ilCleanUpSessionsConfigGUI());
 				break;
 			default:
 				$cmd = $this->DIC->ctrl()->getCmd(self::CMD_INDEX);
@@ -69,23 +63,54 @@ class cleanUpSessionsMainGUI {
 
 
 	/**
-	 * Redirect to the Config GUI of the Plugin
+	 * Creates a new ConfigFormGUI and sets the Content
 	 */
 	protected function index() {
-		$this->DIC->ctrl()->redirectByClass(cleanUpSessionsConfigGUI::class);
-	}
 
+		$form = new ConfigFormGUI($this, $this->DIC);
+		$tpl = $this->DIC->ui()->mainTemplate();
+		$tpl->setContent($form->getHTML());
+
+	}
 
 	/**
-	 * Add tabs to the main Config GUI
+	 * Checks the form input and forwards to checkAndUpdate()
+	 *
+	 * @throws Exception
 	 */
-	protected function initTabs() {
-		$this->DIC->tabs()->addTab(self::TAB_PLUGIN_CONFIG, $this->pl->txt(self::TAB_PLUGIN_CONFIG),
-			$this->DIC->ctrl()->getLinkTargetByClass(cleanUpSessionsConfigGUI::class));
-
+	protected function saveConfig() {
+		$form = new ConfigFormGUI($this, $this->DIC);
+		if ($form->checkInput()) {
+			$this->checkAndUpdate($form->getInput(ilCleanUpSessionsPlugin::EXPIRATION_THRESHOLD));
+		} else {
+			ilUtil::sendFailure($this->pl->txt('msg_failed_save'), true);
+		}
+		$this->DIC->ctrl()->redirect($this);
 	}
 
+	/**
+	 * $expiration_value must be numeric and bigger than 0 for the check to pass. If check passes value gets
+	 * updated into DB
+	 *
+	 * @param int $expiration_value
+	 * @throws Exception
+	 */
+	protected function checkAndUpdate($expiration_value) {
+		$access = new CleanUpSessionsDBAccess($this->DIC);
+		if (is_numeric($expiration_value) && (int)$expiration_value > 0) {
+			$access->updateExpirationValue($expiration_value);
+			ilUtil::sendSuccess($this->pl->txt('msg_successfully_saved'), true);
+		} else {
+			ilUtil::sendFailure($this->pl->txt('msg_not_valid_expiration_input'), true);
+		}
+	}
 
+	/**
+	 *
+	 */
+	protected function initTabs() {
+		$this->DIC->tabs()->activateTab(self::TAB_PLUGIN_CONFIG);
+	}
 	/**
 	 *
 	 */
