@@ -2,13 +2,21 @@
 
 namespace iLUB\Plugins\CleanUpSessions\Helper;
 
+
+/**
+ * Class CleanUpSessionsDBAccess
+ *
+ * This class is responsible for the interaction between the database and the plugin
+ *
+ */
 use ilDB;
 use ilCleanUpSessionsPlugin;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
 
-class cleanUpSessionsDBAccess implements cleanUpSessionsDBInterface{
+
+class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface {
 	/**
 	 * @var ilDB
 	 */
@@ -32,50 +40,31 @@ class cleanUpSessionsDBAccess implements cleanUpSessionsDBInterface{
 	 * @param null $db
 	 * @throws \Exception
 	 */
-	public function __construct( $dic_param =null, $db_param = null, $log_param=null, $stream_param=null) {
-	    if($log_param==null) {
-            $this->logger = new Logger("CleanUpSessionsDBAccess");
-        }else{
-	        $this->logger=$log_param;
-        }
-        if($stream_param==null) {
-            $this->streamHandler = new StreamHandler(ilCleanUpSessionsPlugin::LOG_DESTINATION);
-        }else{
-            $this->streamHandler=$stream_param;
-        }
+
+	public function __construct($dic_param = null, $db_param = null, $log_param = null, $stream_param = null) {
+		if ($log_param == null) {
+			$this->logger = new Logger("CleanUpSessionsDBAccess");
+		} else {
+			$this->logger = $log_param;
+		}
+		if ($stream_param == null) {
+			$this->streamHandler = new StreamHandler(ilCleanUpSessionsPlugin::LOG_DESTINATION);
+		} else {
+			$this->streamHandler = $stream_param;
+		}
 		$this->logger->pushHandler($this->streamHandler, Logger::DEBUG);
 
-        if($dic_param == null) {
-            global $DIC;
-            $this->DIC = $DIC;
-        } else {
-            $this->DIC = $dic_param;
-        }
-		if($db_param == null) {
+		if ($dic_param == null) {
+			global $DIC;
+			$this->DIC = $DIC;
+		} else {
+			$this->DIC = $dic_param;
+		}
+		if ($db_param == null) {
 			$this->db = $this->DIC->database();
 		} else {
 			$this->db = $db_param;
 		}
-	}
-
-	/**
-	 * Logs all anonymous sessions to the log ilCleanUpSessionsPlugin::LOG_DESTINATION and returns the number of
-	 * all active anonymous sessions
-	 *
-	 * @return int
-	 */
-	public function allAnonymousSessions() {
-		$this->logger->info("access all anonymous users... ");
-
-		$sql = "SELECT * FROM usr_session WHERE user_id = 13";
-		$query = $this->db->query($sql);
-		$counter = 0;
-		while ($rec = $this->db->fetchAssoc($query)) {
-			$msg = '#' . $counter++ . '  id: ' . $rec['user_id'] . ' valid till: ' . date('Y-m-d - H:i:s', $rec['expires']) . "\n";
-			$this->logger->info($msg);
-		}
-
-		return $counter;
 	}
 
 	/**
@@ -131,6 +120,26 @@ class cleanUpSessionsDBAccess implements cleanUpSessionsDBInterface{
 	}
 
 	/**
+	 * Logs all anonymous sessions to the log ilCleanUpSessionsPlugin::LOG_DESTINATION and returns the number of
+	 * all active anonymous sessions
+	 *
+	 * @return int
+	 */
+	public function allAnonymousSessions() {
+		$this->logger->info("access all anonymous users... ");
+
+		$sql = "SELECT * FROM usr_session WHERE user_id = 13";
+		$query = $this->db->query($sql);
+		$counter = 0;
+		while ($rec = $this->db->fetchAssoc($query)) {
+			$msg = '#' . $counter++ . '  id: ' . $rec['user_id'] . ' valid till: ' . date('Y-m-d - H:i:s', $rec['expires']) . "\n";
+			$this->logger->info($msg);
+		}
+
+		return $counter;
+	}
+
+	/**
 	 * Returns the latest value in unix system time format, that is considered non-expired. All values
 	 * below the returned one are considered expired.
 	 *
@@ -162,18 +171,19 @@ class cleanUpSessionsDBAccess implements cleanUpSessionsDBInterface{
 	}
 
 
-    /**
-     * @return StreamHandler
-     */
-    public function getStreamHandler(){
-        return $this->streamHandler;
-    }
-    /**
-     * @return Logger
-     */
-    public function getLogger(){
-        return $this->logger;
-    }
+	/**
+	 * @return StreamHandler
+	 */
+	public function getStreamHandler() {
+		return $this->streamHandler;
+	}
+
+	/**
+	 * @return Logger
+	 */
+	public function getLogger() {
+		return $this->logger;
+	}
 
 
 

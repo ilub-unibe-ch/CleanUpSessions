@@ -12,15 +12,19 @@ use Monolog\Handler\StreamHandler;
 
 /**
  * Class RunSync
+ * 
+ * This class has to run the Cron Job
  *
  * @package iLUB\Plugins\CleanUpSessions\Jobs
  */
 class RunSync extends AbstractJob {
 
 
-    /**
-     * @var
-     */
+
+
+	/**
+	 * @var
+	 */
 	protected $dic;
 
     /**
@@ -45,7 +49,6 @@ class RunSync extends AbstractJob {
             $this->db_access = new cleanUpSessionsDBAccess();
         }
     }
-
 
 	/**
 	 * @return string
@@ -86,22 +89,25 @@ class RunSync extends AbstractJob {
 		return 1;
 	}
 
-    /**
-     * @return \ilCronJobResult
-     */
-    public function getJobResult(){
 
-	    return $this->job_result;
+	/**
+	 * @return \ilCronJobResult
+	 */
+	public function getJobResult() {
 
-    }
+		return $this->job_result;
 
-    /**
-     * @return cleanUpSessionsDBAccess
-     */
-    public function getDBAccess(){
+	}
 
-	    return $this->db_access;
-    }
+	/**
+	 * @return cleanUpSessionsDBAccess
+	 */
+	public function getDBAccess() {
+
+		return $this->db_access;
+	}
+
+
 	/**
 	 * @return \ilCronJobResult
 	 * @throws
