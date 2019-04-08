@@ -31,7 +31,7 @@ class ilCleanUpSessionsConfigGUI extends ilPluginConfigGUI {
 
 
 	/**
-	 * cleanUpSessionsMainGUI constructor.
+	 * ilCleanUpSessionsConfigGUI constructor.
 	 * @throws Exception
 	 */
 	public function __construct() {

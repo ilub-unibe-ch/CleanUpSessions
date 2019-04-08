@@ -1,15 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kaufmann
- * Date: 04.02.19
- * Time: 16:58
- */
-
 
 namespace iLUB\Plugins\CleanUpSessions\Helper;
-
-
 
 interface CleanUpSessionsDBInterface {
 	//All methods declared in an interface must be public

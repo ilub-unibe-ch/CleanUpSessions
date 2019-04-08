@@ -19,9 +19,6 @@ use Monolog\Handler\StreamHandler;
  */
 class RunSync extends AbstractJob {
 
-
-
-
 	/**
 	 * @var
 	 */
@@ -32,7 +29,6 @@ class RunSync extends AbstractJob {
      */
 	protected $job_result;
 	protected $db_access;
-
 
     /**
      * RunSync constructor.
@@ -65,14 +61,12 @@ class RunSync extends AbstractJob {
 		return true;
 	}
 
-
 	/**
 	 * @return bool
 	 */
 	public function hasFlexibleSchedule() {
 		return true;
 	}
-
 
 	/**
 	 * @return int
@@ -81,14 +75,12 @@ class RunSync extends AbstractJob {
 		return ilCronJob::SCHEDULE_TYPE_DAILY;
 	}
 
-
 	/**
 	 * @return null
 	 */
 	public function getDefaultScheduleValue() {
 		return 1;
 	}
-
 
 	/**
 	 * @return \ilCronJobResult
@@ -106,7 +98,6 @@ class RunSync extends AbstractJob {
 
 		return $this->db_access;
 	}
-
 
 	/**
 	 * @return \ilCronJobResult

@@ -1,16 +1,12 @@
 <?php
 
 
-
-
 require_once __DIR__ . "/../vendor/autoload.php";
 
 
-use Mockery\ExpectationInterface;
-use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
-use Mockery\MockInterface;
+
 use  iLUB\Plugins\CleanUpSessions\Helper\cleanUpSessionsDBAccess;
-use PHPUnit\Framework\TestCase;
+
 
 
 class DBAccessTest extends PHPUnit_Framework_TestCase {

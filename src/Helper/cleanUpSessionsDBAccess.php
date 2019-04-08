@@ -2,7 +2,6 @@
 
 namespace iLUB\Plugins\CleanUpSessions\Helper;
 
-
 /**
  * Class CleanUpSessionsDBAccess
  *
@@ -13,8 +12,6 @@ use ilDB;
 use ilCleanUpSessionsPlugin;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
-
-
 
 class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface {
 	/**
