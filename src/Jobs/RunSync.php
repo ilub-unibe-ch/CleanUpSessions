@@ -12,15 +12,18 @@ use Monolog\Handler\StreamHandler;
 
 /**
  * Class RunSync
+ * 
+ * This class has to run the Cron Job
  *
  * @package iLUB\Plugins\CleanUpSessions\Jobs
  */
 class RunSync extends AbstractJob {
 
 
-    /**
-     * @var
-     */
+
+	/**
+	 * @var
+	 */
 	protected $dic;
 
     /**
@@ -30,21 +33,21 @@ class RunSync extends AbstractJob {
 	protected $db_access;
 
 
-    /**
-     * RunSync constructor.
-     * @param \ilCronJobResult|null $dic_param
-     * Dieses wird ausgeführt, wenn im GUI die Cron-Jobs angezeigt werden.
-     */
-    public function __construct(\ilCronJobResult $job_result =null, cleanUpSessionsDBAccess $db_access=null) {
-        $this->job_result = $job_result;
-        if($this->job_result == null){
-            $this->job_result = new \ilCronJobResult();
-        }
-        $this->db_access = $db_access;
-        if($this->db_access == null){
-            $this->db_access = new cleanUpSessionsDBAccess();
-        }
-    }
+	/**
+	 * RunSync constructor.
+	 * @param \ilCronJobResult|null $dic_param
+	 * Dieses wird ausgeführt, wenn im GUI die Cron-Jobs angezeigt werden.
+	 */
+	public function __construct(\ilCronJobResult $job_result = null, cleanUpSessionsDBAccess $db_access = null) {
+		$this->job_result = $job_result;
+		if ($this->job_result == null) {
+			$this->job_result = new \ilCronJobResult();
+		}
+		$this->db_access = $db_access;
+		if ($this->db_access == null) {
+			$this->db_access = new cleanUpSessionsDBAccess();
+		}
+	}
 
 
 	/**
@@ -86,22 +89,24 @@ class RunSync extends AbstractJob {
 		return 1;
 	}
 
-    /**
-     * @return \ilCronJobResult
-     */
-    public function getJobResult(){
 
-	    return $this->job_result;
+	/**
+	 * @return \ilCronJobResult
+	 */
+	public function getJobResult() {
 
-    }
+		return $this->job_result;
 
-    /**
-     * @return cleanUpSessionsDBAccess
-     */
-    public function getDBAccess(){
+	}
 
-	    return $this->db_access;
-    }
+	/**
+	 * @return cleanUpSessionsDBAccess
+	 */
+	public function getDBAccess() {
+
+		return $this->db_access;
+	}
+
 	/**
 	 * @return \ilCronJobResult
 	 * @throws

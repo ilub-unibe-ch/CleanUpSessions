@@ -1,65 +1,60 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: kaufmann
- * Date: 04.02.19
- * Time: 16:58
- */
 
 
 namespace iLUB\Plugins\CleanUpSessions\Helper;
 
 
 
-interface cleanUpSessionsDBInterface {
-    //All methods declared in an interface must be public
+interface CleanUpSessionsDBInterface {
+	//All methods declared in an interface must be public
 
-    /**
-     * Logs all anonymous sessions to the log ilCleanUpSessionsPlugin::LOG_DESTINATION and returns the number of
-     * all active anonymous sessions
-     *
-     * @return int
-     */
-    public function allAnonymousSessions() ;
 
-    /**
-     * Logs all expired anonymous sessions to the log ilCleanUpSessionsPlugin::LOG_DESTINATION and returns the number of
-     * all expired anonymous sessions
-     *
-     * @return int
-     */
-    public function expiredAnonymousUsers() ;
+	/**
+	 * Logs all anonymous sessions to the log ilCleanUpSessionsPlugin::LOG_DESTINATION and returns the number of
+	 * all active anonymous sessions
+	 *
+	 * @return int
+	 */
+	public function allAnonymousSessions();
 
-    /**
-     * Returns the set expiration threshold set in the config
-     *
-     * @return mixed
-     */
-    public function getExpirationValue();
+	/**
+	 * Logs all expired anonymous sessions to the log ilCleanUpSessionsPlugin::LOG_DESTINATION and returns the number of
+	 * all expired anonymous sessions
+	 *
+	 * @return int
+	 */
+	public function expiredAnonymousUsers();
 
-    /**
-     * Delets all the expired anonymous sessions from the DB and logs the
-     * remaining non-expired anonymous sessions.
-     */
-    public function removeAnonymousSessionsOlderThanExpirationThreshold() ;
+	/**
+	 * Returns the set expiration threshold set in the config
+	 *
+	 * @return mixed
+	 */
+	public function getExpirationValue();
 
-    /**
-     * Returns the latest value in unix system time format, that is considered non-expired. All values
-     * below the returned one are considered expired.
-     *
-     * @return float|int
-     */
-   public function getThresholdBoundary();
+	/**
+	 * Delets all the expired anonymous sessions from the DB and logs the
+	 * remaining non-expired anonymous sessions.
+	 */
+	public function removeAnonymousSessionsOlderThanExpirationThreshold();
 
-    /**
-     * Updates an entry determined by id with new information
-     *
-     * @param bool $as_obj
-     */
-    public function updateExpirationValue($expiration) ;
+	/**
+	 * Returns the latest value in unix system time format, that is considered non-expired. All values
+	 * below the returned one are considered expired.
+	 *
+	 * @return float|int
+	 */
+	public function getThresholdBoundary();
 
-    /**
-     * Removes the table from DB after uninstall is triggered.
-     */
-    public function removePluginTableFromDB() ;
+	/**
+	 * Updates an entry determined by id with new information
+	 *
+	 * @param bool $as_obj
+	 */
+	public function updateExpirationValue($expiration);
+
+	/**
+	 * Removes the table from DB after uninstall is triggered.
+	 */
+	public function removePluginTableFromDB();
 }
