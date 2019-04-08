@@ -7,10 +7,7 @@ use iLUB\Plugins\CleanUpSessions\Helper\CleanUpSessionsDBAccess;
 
 /**
  * Class ilCleanUpSessionsConfigGUI
- *
- * This GUI redirects commands to the cleanUpSessionsMainGUI
- *
- *  * @ilCtrl_IsCalledBy cleanUpSessionsMainGUI:  ilObjComponentSettingsGUI
+ *  * @ilCtrl_IsCalledBy   ilObjComponentSettingsGUI
  */
 class ilCleanUpSessionsConfigGUI extends ilPluginConfigGUI {
 	const TAB_PLUGIN_CONFIG = 'tab_plugin_config';
@@ -31,7 +28,7 @@ class ilCleanUpSessionsConfigGUI extends ilPluginConfigGUI {
 
 
 	/**
-	 * cleanUpSessionsMainGUI constructor.
+	 * ilCleanUpSessionsConfigGUI constructor.
 	 * @throws Exception
 	 */
 	public function __construct() {

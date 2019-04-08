@@ -9,12 +9,7 @@
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
-
-use Mockery\ExpectationInterface;
-use Mockery\MockInterface;
 use iLUB\Plugins\CleanUpSessions\Jobs\RunSync;
-use PHPUnit\Framework\TestCase;
-
 
 class RunTest extends PHPUnit_Framework_TestCase {
 
