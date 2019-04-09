@@ -3,12 +3,11 @@
 require_once __DIR__ . "/../vendor/autoload.php";
 
 
+
 use iLUB\Plugins\CleanUpSessions\Jobs\RunSync;
 
 
-
 class RunTest extends PHPUnit_Framework_TestCase {
-
 
 	protected $mockCronJobResult;
 	protected $RunSync;
@@ -52,6 +51,7 @@ class RunTest extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($expectedResult, $receivedResult);
 
 	}
+
 
 
 	public function tearDown() {

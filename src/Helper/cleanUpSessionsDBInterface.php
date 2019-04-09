@@ -1,9 +1,13 @@
 <?php
 
+
+
 namespace iLUB\Plugins\CleanUpSessions\Helper;
+
 
 interface CleanUpSessionsDBInterface {
 	//All methods declared in an interface must be public
+
 
 	/**
 	 * Logs all anonymous sessions to the log ilCleanUpSessionsPlugin::LOG_DESTINATION and returns the number of

@@ -13,7 +13,9 @@ use ilCleanUpSessionsPlugin;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
+
 class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface {
+
 	/**
 	 * @var ilDB
 	 */
@@ -123,14 +125,12 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface {
 	 * @return int
 	 */
 	public function allAnonymousSessions() {
-		$this->logger->info("access all anonymous users... ");
 
 		$sql = "SELECT * FROM usr_session WHERE user_id = 13";
 		$query = $this->db->query($sql);
 		$counter = 0;
 		while ($rec = $this->db->fetchAssoc($query)) {
-			$msg = '#' . $counter++ . '  id: ' . $rec['user_id'] . ' valid till: ' . date('Y-m-d - H:i:s', $rec['expires']) . "\n";
-			$this->logger->info($msg);
+			$counter++;
 		}
 
 		return $counter;

@@ -19,6 +19,7 @@ use Monolog\Handler\StreamHandler;
  */
 class RunSync extends AbstractJob {
 
+
 	/**
 	 * @var
 	 */
@@ -81,6 +82,7 @@ class RunSync extends AbstractJob {
 	public function getDefaultScheduleValue() {
 		return 1;
 	}
+
 
 	/**
 	 * @return \ilCronJobResult

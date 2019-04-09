@@ -5,9 +5,8 @@ require_once __DIR__ . "/../vendor/autoload.php";
 
 
 
+
 use  iLUB\Plugins\CleanUpSessions\Helper\cleanUpSessionsDBAccess;
-
-
 
 class DBAccessTest extends PHPUnit_Framework_TestCase {
 	protected $mockDBInterface;
@@ -37,7 +36,7 @@ class DBAccessTest extends PHPUnit_Framework_TestCase {
 
 		$this->mockLogger->shouldReceive("pushHandler");
 
-		$this->mockLogger->shouldReceive("info")->with("access all anonymous users... ")->times(2);
+
 		$this->mockLogger->shouldReceive("info")->with("0 anonymous session(s) have been deleted");
 		$this->mockLogger->shouldReceive("info")->with("There are 0 non-expired anonymous sessions remaining");
 		$this->mockDB->shouldReceive("query")->with("SELECT * FROM usr_session WHERE user_id = 13");
@@ -52,7 +51,6 @@ class DBAccessTest extends PHPUnit_Framework_TestCase {
 
 	public function test_allAnonymousSessions() {
 		$this->mockLogger->shouldReceive("pushHandler");
-		$this->mockLogger->shouldReceive("info")->with("access all anonymous users... ")->once();
 		$this->mockDB->shouldReceive("query")->with("SELECT * FROM usr_session WHERE user_id = 13");
 		$this->mockDB->shouldReceive("fetchAssoc")->once;
 		$this->mockDB->shouldReceive("manipulateF")->once;
@@ -88,7 +86,4 @@ class DBAccessTest extends PHPUnit_Framework_TestCase {
 	public function tearDown() {
 		Mockery::close();
 	}
-
-
-
 }
