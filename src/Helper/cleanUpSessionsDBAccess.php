@@ -116,8 +116,8 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface {
 		$after = $this->allAnonymousSessions();
 
 		// Only for debugging:
-		//$this->logger->info($all - $after . " anonymous session(s) have been deleted");
-		//$this->logger->info("There are " . $after . " non-expired anonymous sessions remaining");
+		$this->logger->info($all - $after . " anonymous session(s) have been deleted");
+		$this->logger->info("There are " . $after . " non-expired anonymous sessions remaining");
 	}
 
 	/**
@@ -127,15 +127,12 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface {
 	 * @return int
 	 */
 	public function allAnonymousSessions() {
-		$this->logger->info("access all anonymous users... ");
+		//$this->logger->info("access all anonymous users... ");
 
 		$sql = "SELECT * FROM usr_session WHERE user_id = 13";
 		$query = $this->db->query($sql);
 		$counter = 0;
-		while ($rec = $this->db->fetchAssoc($query)) {
-			$msg = '#' . $counter++ . '  id: ' . $rec['user_id'] . ' valid till: ' . date('Y-m-d - H:i:s', $rec['expires']) . "\n";
-			$this->logger->info($msg);
-		}
+
 
 		return $counter;
 	}
