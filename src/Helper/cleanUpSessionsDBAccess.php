@@ -116,8 +116,8 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface {
 		$after = $this->allAnonymousSessions();
 
 		// Only for debugging:
-		$this->logger->info($all - $after . " anonymous session(s) have been deleted");
-		$this->logger->info("There are " . $after . " non-expired anonymous sessions remaining");
+		//$this->logger->info($all - $after . " anonymous session(s) have been deleted");
+		//$this->logger->info("There are " . $after . " non-expired anonymous sessions remaining");
 	}
 
 	/**
