@@ -127,12 +127,13 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface {
 	 * @return int
 	 */
 	public function allAnonymousSessions() {
-		//$this->logger->info("access all anonymous users... ");
 
 		$sql = "SELECT * FROM usr_session WHERE user_id = 13";
 		$query = $this->db->query($sql);
 		$counter = 0;
-
+		while ($rec = $this->db->fetchAssoc($query)) {
+			$counter++;
+		}
 
 		return $counter;
 	}
