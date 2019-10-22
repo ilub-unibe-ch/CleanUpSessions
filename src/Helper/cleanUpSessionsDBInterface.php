@@ -57,4 +57,15 @@ interface CleanUpSessionsDBInterface {
 	 * Removes the table from DB after uninstall is triggered.
 	 */
 	public function removePluginTableFromDB();
+
+    /**
+     * logs to db how many anonymous sessions were deleted
+     */
+
+	public function logToDB();
+
+    /**
+     * returns the count of all sessions active
+     */
+	public function getAllSessions();
 }

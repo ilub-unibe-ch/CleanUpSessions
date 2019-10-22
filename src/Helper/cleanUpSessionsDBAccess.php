@@ -10,8 +10,7 @@ namespace iLUB\Plugins\CleanUpSessions\Helper;
  */
 use ilDB;
 use ilCleanUpSessionsPlugin;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
+
 
 
 class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface {
@@ -21,11 +20,11 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface {
 	 */
 	protected $db;
 
-	/**
-	 * @var logger
-	 */
-	protected $logger;
-	protected $streamHandler;
+
+
+	protected $deleted_anons;
+    protected $remaining_anons;
+    protected $all_remaining_sessions;
 
 	/**
 	 * @var DIC
@@ -33,7 +32,7 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface {
 	protected $DIC;
 
 	/**
-	 * CleanUpSessionsDBAccess constructor. Initializes Monolog logger. Logs to root directory of the plugin.
+	 * CleanUpSessionsDBAccess constructor.
 	 *
 	 * @param $dic
 	 * @param null $db
@@ -41,17 +40,6 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface {
 	 */
 
 	public function __construct($dic_param = null, $db_param = null, $log_param = null, $stream_param = null) {
-		if ($log_param == null) {
-			$this->logger = new Logger("CleanUpSessionsDBAccess");
-		} else {
-			$this->logger = $log_param;
-		}
-		if ($stream_param == null) {
-			$this->streamHandler = new StreamHandler(ilCleanUpSessionsPlugin::LOG_DESTINATION);
-		} else {
-			$this->streamHandler = $stream_param;
-		}
-		$this->logger->pushHandler($this->streamHandler, Logger::DEBUG);
 
 		if ($dic_param == null) {
 			global $DIC;
@@ -79,9 +67,7 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface {
 
 		$counter = 0;
 		while ($rec = $this->db->fetchAssoc($set)) {
-			$msg = 'Expired Users -> #' . $counter++ . '  id: ' . $rec['user_id'] . ' valid till: ' .
-				date('Y-m-d - H:i:s', $rec['expires']) . "\n";
-			$this->logger->info($msg);
+		    $counter++;
 		}
 
 		return $counter;
@@ -105,17 +91,13 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface {
 	 * remaining non-expired anonymous sessions.
 	 */
 	public function removeAnonymousSessionsOlderThanExpirationThreshold() {
-
 		$all = $this->allAnonymousSessions();
-
 		$sql = "DELETE FROM usr_session WHERE user_id = 13 AND ctime < %s";
 		$this->db->manipulateF($sql, ['integer'], [$this->getThresholdBoundary()]);
+		$this->remaining_anons = $this->allAnonymousSessions();
+		$this->deleted_anons=$all-$this->remaining_anons;
+		$this->logtoDB();
 
-		$after = $this->allAnonymousSessions();
-
-		// Only for debugging:
-		$this->logger->info($all - $after . " anonymous session(s) have been deleted");
-		$this->logger->info("There are " . $after . " non-expired anonymous sessions remaining");
 	}
 
 	/**
@@ -168,20 +150,36 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface {
 	}
 
 
-	/**
-	 * @return StreamHandler
-	 */
-	public function getStreamHandler() {
-		return $this->streamHandler;
-	}
+	public function logToDB(){
+	    $timestamp=time();
+	    $date=new \DateTime($timestamp);
+	    $this->all_remaining_sessions=getAllSessions();
+        $this->db->insert(ilCleanUpSessionsPlugin::LOG_TABLE, array(
+            'timestamp' => array(
+                'integer', $timestamp
+            ),
+            'date'=>array(
+                'time',$date
+            ),
+            'deleted_anons'=>array(
+                'integer', $this->deleted_anons
+            ),
+            'remaining_anons'=>array(
+                'integer', $this->remaining_anons
+            ),
+            'all_remaining_session'=>array(
+                'integer', $this->all_remaining_sessions
+            )
+            ));
+    }
 
-	/**
-	 * @return Logger
-	 */
-	public function getLogger() {
-		return $this->logger;
-	}
+    public function getAllSessions(){
+        $sql = "SELECT count(*) FROM usr_session";
+        $query = $this->db->query($sql);
+        $rec = $this->db->fetchAssoc($query);
 
+        return $rec['count(*)'];
+    }
 
 
 }
