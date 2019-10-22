@@ -7,75 +7,75 @@ use iLUB\Plugins\CleanUpSessions\Jobs\RunSync;
 
 /**
  * Class ilCleanUpSessionsPlugin
- *
  * @package
  */
-class ilCleanUpSessionsPlugin extends ilCronHookPlugin {
+class ilCleanUpSessionsPlugin extends ilCronHookPlugin
+{
 
-	const PLUGIN_ID = 'clean_ses';
-	const PLUGIN_NAME = 'CleanUpSessions';
-	const TABLE_NAME = 'clean_ses_cron';
-	const COLUMN_NAME = 'expiration';
-	const DEFAULT_EXPIRATION_VALUE = 240;
-	const EXPIRATION_THRESHOLD = 'expiration_threshold';
-	# const IL_PLUGIN_TABLE = 'il_plugin';
-	//const LOG_DESTINATION = '/var/log/ilias/CleanUpSessions.log';
-	const LOG_TABLE='clean_ses_log';
+    const PLUGIN_ID = 'clean_ses';
+    const PLUGIN_NAME = 'CleanUpSessions';
+    const TABLE_NAME = 'clean_ses_cron';
+    const COLUMN_NAME = 'expiration';
+    const DEFAULT_EXPIRATION_VALUE = 240;
+    const EXPIRATION_THRESHOLD = 'expiration_threshold';
+    # const IL_PLUGIN_TABLE = 'il_plugin';
+    //const LOG_DESTINATION = '/var/log/ilias/CleanUpSessions.log';
+    const LOG_TABLE = 'clean_ses_log';
 
-	/**
-	 * @var ilCleanUpSessionsPlugin
-	 */
-	protected static $instance;
-	/**
-	 * @var $this ->access
-	 */
-	protected $access;
+    /**
+     * @var ilCleanUpSessionsPlugin
+     */
+    protected static $instance;
+    /**
+     * @var $this ->access
+     */
+    protected $access;
 
+    /**
+     * @return string
+     */
+    public function getPluginName() : string
+    {
+        return self::PLUGIN_NAME;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getPluginName(): string {
-		return self::PLUGIN_NAME;
-	}
+    /**
+     * @return ilCleanUpSessionsPlugin
+     */
+    public static function getInstance() : ilCleanUpSessionsPlugin
+    {
+        if (self::$instance === null) {
+            self::$instance = new self();
+        }
 
+        return self::$instance;
+    }
 
-	/**
-	 * @return ilCleanUpSessionsPlugin
-	 */
-	public static function getInstance(): ilCleanUpSessionsPlugin {
-		if (self::$instance === NULL) {
-			self::$instance = new self();
-		}
+    /**
+     * @return ilCronJob[]
+     */
+    public function getCronJobInstances() : array
+    {
+        return [new RunSync()];
+    }
 
-		return self::$instance;
-	}
+    /**
+     * @param string $a_job_id
+     * @return ilCronJob
+     */
+    public function getCronJobInstance($a_job_id) : ilCronJob
+    {
+        $a_job_id = "\iLUB\Plugins\CleanUpSessions\Jobs\RunSync";
+        return new $a_job_id();
+    }
 
-
-	/**
-	 * @return ilCronJob[]
-	 */
-	public function getCronJobInstances(): array {
-		return [new RunSync()];
-	}
-
-
-	/**
-	 * @param string $a_job_id
-	 * @return ilCronJob
-	 */
-	public function getCronJobInstance($a_job_id): ilCronJob {
-		$a_job_id = "\iLUB\Plugins\CleanUpSessions\Jobs\RunSync";
-		return new $a_job_id();
-	}
-
-
-	/**
-	 * AfterUninstall deletes the tables from the DB
-	 */
-	protected function afterUninstall() {
-		$this->access = new cleanUpSessionsDBAccess();
-		$this->access->removePluginTableFromDB();
-	}
+    /**
+     * AfterUninstall deletes the tables from the DB
+     */
+    protected function afterUninstall()
+    {
+        $this->access = new cleanUpSessionsDBAccess();
+        $this->access->removePluginTableFromDB();
+    }
 
 }
