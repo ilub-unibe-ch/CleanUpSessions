@@ -155,7 +155,7 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface {
 
 	public function logToDB(){
         $timestamp                    = time();
-        $date                         = date('Y-m-d, H:m:s', $timestamp);
+        $date                         = date('Y-m-d H:i:s', $timestamp);
         $this->all_remaining_sessions = $this->getAllSessions();
         $this->db->insert(ilCleanUpSessionsPlugin::LOG_TABLE, array(
             'timestamp'             => array('integer', $timestamp),
