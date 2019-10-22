@@ -147,30 +147,24 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface {
 	public function removePluginTableFromDB() {
 		$sql = "DROP TABLE " . ilCleanUpSessionsPlugin::TABLE_NAME;
 		$this->db->query($sql);
+
+        $sql = "DROP TABLE " . ilCleanUpSessionsPlugin::LOG_TABLE;
+        $this->db->query($sql);
 	}
 
 
 	public function logToDB(){
-	    $timestamp=time();
-	    $date=new \DateTime($timestamp);
-	    $this->all_remaining_sessions=getAllSessions();
+        $timestamp                    = time();
+        $date                         = date('Y-m-d, H:m:s', $timestamp);
+        $this->all_remaining_sessions = $this->getAllSessions();
         $this->db->insert(ilCleanUpSessionsPlugin::LOG_TABLE, array(
-            'timestamp' => array(
-                'integer', $timestamp
-            ),
-            'date'=>array(
-                'time',$date
-            ),
-            'deleted_anons'=>array(
-                'integer', $this->deleted_anons
-            ),
-            'remaining_anons'=>array(
-                'integer', $this->remaining_anons
-            ),
-            'all_remaining_session'=>array(
-                'integer', $this->all_remaining_sessions
-            )
-            ));
+            'timestamp'             => array('integer', $timestamp),
+            'date'                  => array('datetime', $date),
+            'deleted_anons'         => array('integer', $this->deleted_anons),
+            'remaining_anons'       => array('integer', $this->remaining_anons),
+            'all_remaining_sessions' => array('integer', $this->all_remaining_sessions)
+        ));
+
     }
 
     public function getAllSessions(){

@@ -35,7 +35,7 @@ if (!$db->tableExists(ilCleanUpSessionsPlugin::LOG_TABLE)) {
             'notnull' => TRUE
         ),
         'date' => array(
-            'type' => 'time',
+            'type' => 'timestamp',
             'notnull' => TRUE
         ),
 		'deleted_anons'=>array(
