@@ -33,7 +33,7 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
      * @throws \Exception
      */
 
-    public function __construct($dic_param = null, $db_param = null, $log_param = null, $stream_param = null)
+    public function __construct($dic_param = null, $db_param = null)
     {
 
         if ($dic_param == null) {
@@ -154,7 +154,7 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
         $timestamp                    = time();
         $date                         = date('Y-m-d H:i:s', $timestamp);
         $this->all_remaining_sessions = $this->getAllSessions();
-        $this->db->insert(ilCleanUpSessionsPlugin::LOG_TABLE, array(
+        $this->db->insert('clean_ses_log', array(
             'timestamp'              => array('integer', $timestamp),
             'date'                   => array('datetime', $date),
             'deleted_anons'          => array('integer', $this->deleted_anons),
