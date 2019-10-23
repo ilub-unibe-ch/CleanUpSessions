@@ -7,15 +7,13 @@ interface CleanUpSessionsDBInterface
     //All methods declared in an interface must be public
 
     /**
-     * Logs all anonymous sessions to the log ilCleanUpSessionsPlugin::LOG_DESTINATION and returns the number of
-     * all active anonymous sessions
+     * returns the number of all active anonymous sessions
      * @return int
      */
     public function allAnonymousSessions();
 
     /**
-     * Logs all expired anonymous sessions to the log ilCleanUpSessionsPlugin::LOG_DESTINATION and returns the number of
-     * all expired anonymous sessions
+     * returns the number of all expired anonymous sessions
      * @return int
      */
     public function expiredAnonymousUsers();
@@ -27,8 +25,8 @@ interface CleanUpSessionsDBInterface
     public function getExpirationValue();
 
     /**
-     * Delets all the expired anonymous sessions from the DB and logs the
-     * remaining non-expired anonymous sessions.
+     * Delets all the expired anonymous sessions from the DB and
+     * writes a log in the DB
      */
     public function removeAnonymousSessionsOlderThanExpirationThreshold();
 
@@ -51,13 +49,13 @@ interface CleanUpSessionsDBInterface
     public function removePluginTableFromDB();
 
     /**
-     * logs to database: how many anonymous sessions were deleted, how many users are online
+     * logs to database: how many anonymous sessions were deleted and how many sessions were active in the last 5/15/60 Minutes
      */
 
     public function logToDB();
 
     /**
-     * returns the count of all sessions active
+     * returns the count of all  active sessions
      * @return  mixed
      */
     public function getAllSessions();

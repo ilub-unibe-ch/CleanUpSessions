@@ -8,8 +8,6 @@ namespace iLUB\Plugins\CleanUpSessions\Helper;
  */
 use ilDB;
 use ilCleanUpSessionsPlugin;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
 
 class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
 {
@@ -24,11 +22,6 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
     protected $all_remaining_sessions;
     protected $timestamp;
 
-    /**
-     * @var logger
-     */
-    protected $logger;
-    protected $streamHandler;
 
     /**
      * @var DIC
@@ -42,7 +35,7 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
      * @throws \Exception
      */
 
-    public function __construct($dic_param = null, $db_param = null, $log_param = null, $stream_param = null)
+    public function __construct($dic_param = null, $db_param = null)
     {
         $this->timestamp = time();
         if ($dic_param == null) {
@@ -56,23 +49,10 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
         } else {
             $this->db = $db_param;
         }
-
-        if ($log_param == null) {
-            $this->logger = new Logger("CleanUpSessionsDBAccess");
-        } else {
-            $this->logger = $log_param;
-        }
-        if ($stream_param == null) {
-            $this->streamHandler = new StreamHandler(ilCleanUpSessionsPlugin::LOG_DESTINATION);
-        } else {
-            $this->streamHandler = $stream_param;
-        }
-        $this->logger->pushHandler($this->streamHandler, Logger::DEBUG);
     }
 
     /**
-     * Logs all expired anonymous sessions to the log ilCleanUpSessionsPlugin::LOG_DESTINATION and returns the number of
-     * all expired anonymous sessions
+     * returns the number of all expired anonymous sessions
      * @return int
      */
     public function expiredAnonymousUsers()
@@ -80,16 +60,8 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
         $thresholdBoundary = $this->getExpirationValue();
         $sql               = "SELECT Count(*) FROM usr_session WHERE user_id = 13 or user_id=0 AND ctime < %s";
         $set               = $this->db->queryF($sql, ['integer'], [$thresholdBoundary]);
-        $rec               = $this->db->fetchAccos($set);
+        $rec               = $this->db->fetchAssoc($set);
         return $rec['Count(*)'];
-
-        /**
-         * $counter = 0;
-         * while ($rec = $this->db->fetchAssoc($set)) {
-         * $counter++;
-         * }
-         * return $counter;
-         **/
     }
 
     /**
@@ -106,8 +78,8 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
     }
 
     /**
-     * Delets all the expired anonymous sessions from the DB and logs the
-     * remaining non-expired anonymous sessions.
+     * Delets all the expired anonymous sessions from the DB and
+     * writes a log in the DB
      */
     public function removeAnonymousSessionsOlderThanExpirationThreshold()
     {
@@ -116,19 +88,18 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
         $this->db->manipulateF($sql, ['integer'], [$this->getThresholdBoundary()]);
         $this->remaining_anons = $this->allAnonymousSessions();
         $this->deleted_anons   = $all - $this->remaining_anons;
-        $this->logtoDB();
+        $this-> logtoDB();
 
     }
 
     /**
-     * Logs all anonymous sessions to the log ilCleanUpSessionsPlugin::LOG_DESTINATION and returns the number of
-     * all active anonymous sessions
+     * returns the number of all active anonymous sessions
      * @return int
      */
     public function allAnonymousSessions()
     {
 
-        $sql     = "SELECT * FROM usr_session WHERE user_id = 13 or user_id=0 ";
+        $sql     = "SELECT * FROM usr_session WHERE user_id = 13 or user_id=0";
         $query   = $this->db->query($sql);
         $counter = 0;
         while ($rec = $this->db->fetchAssoc($query)) {
@@ -172,6 +143,7 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
         $this->db->query($sql);
     }
 
+
     public function logToDB()
     {
 
@@ -195,6 +167,9 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
 
     }
 
+    /**
+     * @return mixed
+     */
     public function getAllSessions()
     {
         $sql   = "SELECT count(*) FROM usr_session";
@@ -204,13 +179,16 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
         return $rec['count(*)'];
     }
 
+    /**
+     * @param $timeEarly
+     * @param $timeLate
+     * @return mixed
+     */
     public function getSessionsBetween($timeEarly, $timeLate)
     {
-        //$lastseen = $timeNow - $duration;
         $sql   = "SELECT count(*) from usr_session where ctime Between '" . $timeEarly . "'and '" . $timeLate . "'";
         $query = $this->db->query($sql);
         $rec   = $this->db->fetchAssoc($query);
-        //  $this->logger->info($sql . );
         return $rec['count(*)'];
     }
 

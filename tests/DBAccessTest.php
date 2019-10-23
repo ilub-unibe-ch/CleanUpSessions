@@ -31,12 +31,13 @@ class DBAccessTest extends PHPUnit_Framework_TestCase
     {
 
 
-        $this->mockDB->shouldReceive("query")->with("SELECT * FROM usr_session WHERE user_id = 13");
+        $this->mockDB->shouldReceive("query")->with("SELECT * FROM usr_session WHERE user_id = 13 or user_id=0");
         $this->mockDB->shouldReceive("query")->with("SELECT expiration FROM clean_ses_cron");
-        $this->mockDB->shouldReceive("fetchAssoc")->times(4);
+        $this->mockDB->shouldReceive("fetchAssoc")->times(7);
         $this->mockDB->shouldReceive("manipulateF")->once;
         $this->mockDB->shouldReceive("query")->with("SELECT count(*) FROM usr_session");
         $this->mockDB->shouldReceive("insert");
+        $this->mockDB->shouldReceive("query")->times(3);
 
         $this->DBAccess = new cleanUpSessionsDBAccess($this->mockDIC, $this->mockDB);
         $this->DBAccess->removeAnonymousSessionsOlderThanExpirationThreshold();
@@ -45,7 +46,7 @@ class DBAccessTest extends PHPUnit_Framework_TestCase
     public function test_allAnonymousSessions()
     {
 
-        $this->mockDB->shouldReceive("query")->with("SELECT * FROM usr_session WHERE user_id = 13");
+        $this->mockDB->shouldReceive("query")->with("SELECT * FROM usr_session WHERE user_id = 13 or user_id=0");
         $this->mockDB->shouldReceive("fetchAssoc")->once;
         $this->mockDB->shouldReceive("manipulateF")->once;
 
@@ -83,6 +84,7 @@ class DBAccessTest extends PHPUnit_Framework_TestCase
         $this->mockDB->shouldReceive("query")->with("SELECT count(*) FROM usr_session");
         $this->mockDB->shouldReceive("fetchAssoc")->once;
         $this->mockDB->shouldReceive("insert")->once;
+        $this->mockDB->shouldReceive("query")->times(3);
 
 
         $this->DBAccess = new cleanUpSessionsDBAccess($this->mockDIC, $this->mockDB);
@@ -97,6 +99,14 @@ class DBAccessTest extends PHPUnit_Framework_TestCase
 
         $this->DBAccess = new cleanUpSessionsDBAccess($this->mockDIC, $this->mockDB);
         $this->DBAccess->getAllSessions();
+    }
+
+    public function test_getSessionsBetween(){
+        $this->mockDB->shouldReceive("query")->with("SELECT count(*) from usr_session where ctime Between '123456'and '654321'");
+        $this->mockDB->shouldReceive("fetchAssoc")->once;
+
+        $this->DBAccess = new cleanUpSessionsDBAccess($this->mockDIC, $this->mockDB);
+        $this->DBAccess->getSessionsBetween(123456,654321);
     }
     public function tearDown()
     {
