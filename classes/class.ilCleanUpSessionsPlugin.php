@@ -20,6 +20,8 @@ class ilCleanUpSessionsPlugin extends ilCronHookPlugin
     const EXPIRATION_THRESHOLD = 'expiration_threshold';
     const LOG_TABLE = 'clean_ses_log';
 
+    const LOG_DESTINATION = '/var/log/ilias/CleanUpSessions.log';
+
     /**
      * @var ilCleanUpSessionsPlugin
      */

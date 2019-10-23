@@ -51,13 +51,22 @@ interface CleanUpSessionsDBInterface
     public function removePluginTableFromDB();
 
     /**
-     * logs to db how many anonymous sessions were deleted
+     * logs to database: how many anonymous sessions were deleted, how many users are online
      */
 
     public function logToDB();
 
     /**
      * returns the count of all sessions active
+     * @return  mixed
      */
     public function getAllSessions();
+
+    /**
+     * returns how many Users were active during the two timestamps
+     * @param $timeEarly
+     * @param $timeLate
+     * @return mixed
+     */
+    public function getSessionsBetween($timeEarly, $timeLate);
 }

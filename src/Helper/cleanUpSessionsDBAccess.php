@@ -8,6 +8,8 @@ namespace iLUB\Plugins\CleanUpSessions\Helper;
  */
 use ilDB;
 use ilCleanUpSessionsPlugin;
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
 
 class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
 {
@@ -20,6 +22,13 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
     protected $deleted_anons;
     protected $remaining_anons;
     protected $all_remaining_sessions;
+    protected $timestamp;
+
+    /**
+     * @var logger
+     */
+    protected $logger;
+    protected $streamHandler;
 
     /**
      * @var DIC
@@ -33,9 +42,9 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
      * @throws \Exception
      */
 
-    public function __construct($dic_param = null, $db_param = null)
+    public function __construct($dic_param = null, $db_param = null, $log_param = null, $stream_param = null)
     {
-
+        $this->timestamp = time();
         if ($dic_param == null) {
             global $DIC;
             $this->DIC = $DIC;
@@ -47,6 +56,18 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
         } else {
             $this->db = $db_param;
         }
+
+        if ($log_param == null) {
+            $this->logger = new Logger("CleanUpSessionsDBAccess");
+        } else {
+            $this->logger = $log_param;
+        }
+        if ($stream_param == null) {
+            $this->streamHandler = new StreamHandler(ilCleanUpSessionsPlugin::LOG_DESTINATION);
+        } else {
+            $this->streamHandler = $stream_param;
+        }
+        $this->logger->pushHandler($this->streamHandler, Logger::DEBUG);
     }
 
     /**
@@ -57,15 +78,18 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
     public function expiredAnonymousUsers()
     {
         $thresholdBoundary = $this->getExpirationValue();
-        $sql               = "SELECT * FROM usr_session WHERE user_id = 13 AND ctime < %s";
+        $sql               = "SELECT Count(*) FROM usr_session WHERE user_id = 13 or user_id=0 AND ctime < %s";
         $set               = $this->db->queryF($sql, ['integer'], [$thresholdBoundary]);
+        $rec               = $this->db->fetchAccos($set);
+        return $rec['Count(*)'];
 
-        $counter = 0;
-        while ($rec = $this->db->fetchAssoc($set)) {
-            $counter++;
-        }
-
-        return $counter;
+        /**
+         * $counter = 0;
+         * while ($rec = $this->db->fetchAssoc($set)) {
+         * $counter++;
+         * }
+         * return $counter;
+         **/
     }
 
     /**
@@ -88,7 +112,7 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
     public function removeAnonymousSessionsOlderThanExpirationThreshold()
     {
         $all = $this->allAnonymousSessions();
-        $sql = "DELETE FROM usr_session WHERE user_id = 13 AND ctime < %s";
+        $sql = "DELETE FROM usr_session WHERE user_id = 13 or user_id=0 AND ctime < %s";
         $this->db->manipulateF($sql, ['integer'], [$this->getThresholdBoundary()]);
         $this->remaining_anons = $this->allAnonymousSessions();
         $this->deleted_anons   = $all - $this->remaining_anons;
@@ -104,7 +128,7 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
     public function allAnonymousSessions()
     {
 
-        $sql     = "SELECT * FROM usr_session WHERE user_id = 13";
+        $sql     = "SELECT * FROM usr_session WHERE user_id = 13 or user_id=0 ";
         $query   = $this->db->query($sql);
         $counter = 0;
         while ($rec = $this->db->fetchAssoc($query)) {
@@ -121,9 +145,8 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
      */
     public function getThresholdBoundary()
     {
-        $currentTime         = time();
         $expirationThreshold = $this->getExpirationValue();
-        return $currentTime - $expirationThreshold * 60;
+        return $this->timestamp - $expirationThreshold * 60;
     }
 
     /**
@@ -151,15 +174,23 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
 
     public function logToDB()
     {
-        $timestamp                    = time();
-        $date                         = date('Y-m-d H:i:s', $timestamp);
+
+        $date  = date('Y-m-d H:i:s', $this->timestamp);
+        $min5  = $this->getSessionsBetween($this->timestamp - 300, $this->timestamp);
+        $min15 = $this->getSessionsBetween($this->timestamp - 900, $this->timestamp);
+        $hour1 = $this->getSessionsBetween($this->timestamp - 3600, $this->timestamp);
+
         $this->all_remaining_sessions = $this->getAllSessions();
         $this->db->insert('clean_ses_log', array(
-            'timestamp'              => array('integer', $timestamp),
-            'date'                   => array('datetime', $date),
-            'deleted_anons'          => array('integer', $this->deleted_anons),
-            'remaining_anons'        => array('integer', $this->remaining_anons),
-            'all_remaining_sessions' => array('integer', $this->all_remaining_sessions)
+            'timestamp'                => array('integer', $this->timestamp),
+            'date'                     => array('datetime', $date),
+            'deleted_anons'            => array('integer', $this->deleted_anons),
+            'remaining_anons'          => array('integer', $this->remaining_anons),
+            'all_remaining_sessions'   => array('integer', $this->all_remaining_sessions),
+            'active_during_last_5min'  => array('integer', $min5),
+            'active_during_last_15min' => array('integer', $min15),
+            'active_during_last_hour'  => array('integer', $hour1)
+
         ));
 
     }
@@ -170,6 +201,16 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface
         $query = $this->db->query($sql);
         $rec   = $this->db->fetchAssoc($query);
 
+        return $rec['count(*)'];
+    }
+
+    public function getSessionsBetween($timeEarly, $timeLate)
+    {
+        //$lastseen = $timeNow - $duration;
+        $sql   = "SELECT count(*) from usr_session where ctime Between '" . $timeEarly . "'and '" . $timeLate . "'";
+        $query = $this->db->query($sql);
+        $rec   = $this->db->fetchAssoc($query);
+        //  $this->logger->info($sql . );
         return $rec['count(*)'];
     }
 

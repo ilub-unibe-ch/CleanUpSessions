@@ -57,3 +57,31 @@ if (!$db->tableExists(ilCleanUpSessionsPlugin::LOG_TABLE)) {
 
 }
 ?>
+
+<#3>
+<?php
+/** @var ilDB $ilDB */
+global $ilDB;
+$db = $ilDB;
+require_once('Customizing/global/plugins/Services/Cron/CronHook/CleanUpSessions/classes/class.ilCleanUpSessionsPlugin.php');
+if (!$ilDB->tableColumnExists(ilCleanUpSessionsPlugin::LOG_TABLE, 'active_during_last_5min')) {
+    $ilDB->addTableColumn(ilCleanUpSessionsPlugin::LOG_TABLE, 'active_during_last_5min', array(
+        "type"   => "integer",
+        "length" => '4'
+    ));
+}
+if (!$ilDB->tableColumnExists(ilCleanUpSessionsPlugin::LOG_TABLE, 'active_during_last_15min')) {
+    $ilDB->addTableColumn(ilCleanUpSessionsPlugin::LOG_TABLE, 'active_during_last_15min', array(
+        "type"   => "integer",
+        "length" => '4'
+    ));
+
+}
+if (!$ilDB->tableColumnExists(ilCleanUpSessionsPlugin::LOG_TABLE, 'active_during_last_hour')) {
+    $ilDB->addTableColumn(ilCleanUpSessionsPlugin::LOG_TABLE, 'active_during_last_hour', array(
+        "type"   => "integer",
+        "length" => '4'
+    ));
+}
+
+?>
