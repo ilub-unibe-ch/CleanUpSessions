@@ -50,10 +50,10 @@ class ilCleanUpSessionsPlugin extends ilCronHookPlugin {
 		return self::$instance;
 	}
 
-
-	/**
-	 * @return ilCronJob[]
-	 */
+    /**
+     * @return ilCronJob[]
+     * @throws Exception
+     */
 	public function getCronJobInstances(): array {
 		return [new RunSync()];
 	}
@@ -68,10 +68,10 @@ class ilCleanUpSessionsPlugin extends ilCronHookPlugin {
 		return new $a_job_id();
 	}
 
-
-	/**
-	 * AfterUninstall deletes the tables from the DB
-	 */
+    /**
+     * AfterUninstall deletes the tables from the DB
+     * @throws Exception
+     */
 	protected function afterUninstall() {
 		$this->access = new cleanUpSessionsDBAccess();
 		$this->access->removePluginTableFromDB();

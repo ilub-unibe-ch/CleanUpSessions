@@ -32,13 +32,14 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface {
 	 */
 	protected $DIC;
 
-	/**
-	 * CleanUpSessionsDBAccess constructor. Initializes Monolog logger. Logs to root directory of the plugin.
-	 *
-	 * @param $dic
-	 * @param null $db
-	 * @throws \Exception
-	 */
+    /**
+     * CleanUpSessionsDBAccess constructor. Initializes Monolog logger. Logs to root directory of the plugin.
+     * @param null $dic_param
+     * @param null $db_param
+     * @param null $log_param
+     * @param null $stream_param
+     * @throws \Exception
+     */
 
 	public function __construct($dic_param = null, $db_param = null, $log_param = null, $stream_param = null) {
 		if ($log_param == null) {
@@ -51,7 +52,7 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface {
 		} else {
 			$this->streamHandler = $stream_param;
 		}
-		$this->logger->pushHandler($this->streamHandler, Logger::DEBUG);
+		$this->logger->pushHandler($this->streamHandler);
 
 		if ($dic_param == null) {
 			global $DIC;
@@ -148,12 +149,11 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface {
 		return $currentTime - $expirationThreshold * 60;
 	}
 
-	/**
-	 * Updates an entry determined by id with new information
-	 *
-	 * @param bool $as_obj
-	 */
-	public function updateExpirationValue($expiration) {
+    /**
+     * Updates an entry determined by id with new information
+     * @param $expiration
+     */
+    public function updateExpirationValue($expiration) {
 		$this->db->manipulate('UPDATE ' . ilCleanUpSessionsPlugin::TABLE_NAME . ' SET' .
 			' expiration = ' . $this->db->quote($expiration, 'integer') . ';'
 		);
@@ -166,22 +166,4 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface {
 		$sql = "DROP TABLE " . ilCleanUpSessionsPlugin::TABLE_NAME;
 		$this->db->query($sql);
 	}
-
-
-	/**
-	 * @return StreamHandler
-	 */
-	public function getStreamHandler() {
-		return $this->streamHandler;
-	}
-
-	/**
-	 * @return Logger
-	 */
-	public function getLogger() {
-		return $this->logger;
-	}
-
-
-
 }

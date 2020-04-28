@@ -46,11 +46,11 @@ interface CleanUpSessionsDBInterface {
 	 */
 	public function getThresholdBoundary();
 
-	/**
-	 * Updates an entry determined by id with new information
-	 *
-	 * @param bool $as_obj
-	 */
+    /**
+     * Updates an entry determined by id with new information
+     * @param $expiration
+     * @return
+     */
 	public function updateExpirationValue($expiration);
 
 	/**

@@ -11,10 +11,5 @@ use ilCronJob;
  */
 abstract class AbstractJob extends ilCronJob {
 
-	/**
-	 * @param string $message
-	 */
-	protected function log($message) {
-		$this->ilLog()->write($message);
-	}
+
 }

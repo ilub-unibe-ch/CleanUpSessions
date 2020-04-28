@@ -5,9 +5,6 @@ namespace iLUB\Plugins\CleanUpSessions\Jobs;
 use Exception;
 use ilCronJob;
 use iLUB\Plugins\CleanUpSessions\Helper\cleanUpSessionsDBAccess;
-use ilCleanUpSessionsPlugin;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
 
 
 /**
@@ -33,8 +30,9 @@ class RunSync extends AbstractJob {
 
     /**
      * RunSync constructor.
-     * @param \ilCronJobResult|null $dic_param
-     * Dieses wird ausgeführt, wenn im GUI die Cron-Jobs angezeigt werden.
+     * @param \ilCronJobResult|null        $job_result
+     * @param cleanUpSessionsDBAccess|null $db_access
+     * @throws Exception
      */
     public function __construct(\ilCronJobResult $job_result =null, cleanUpSessionsDBAccess $db_access=null) {
         $this->job_result = $job_result;

@@ -7,8 +7,10 @@ require_once __DIR__ . "/../vendor/autoload.php";
 
 
 use  iLUB\Plugins\CleanUpSessions\Helper\cleanUpSessionsDBAccess;
+use PHPUnit\Framework\TestCase;
 
-class DBAccessTest extends PHPUnit_Framework_TestCase {
+
+class DBAccessTest extends TestCase {
 	protected $mockDBInterface;
 
 
@@ -42,7 +44,7 @@ class DBAccessTest extends PHPUnit_Framework_TestCase {
 		$this->mockDB->shouldReceive("query")->with("SELECT * FROM usr_session WHERE user_id = 13");
 		$this->mockDB->shouldReceive("query")->with("SELECT expiration FROM clean_ses_cron");
 		$this->mockDB->shouldReceive("fetchAssoc")->times(3);
-		$this->mockDB->shouldReceive("manipulateF")->once;
+		$this->mockDB->shouldReceive("manipulateF")->times(1);
 
 		$this->DBAccess = new cleanUpSessionsDBAccess($this->mockDIC, $this->mockDB, $this->mockLogger, $this->mockStreamHandler);
 		$this->DBAccess->removeAnonymousSessionsOlderThanExpirationThreshold();
@@ -52,8 +54,7 @@ class DBAccessTest extends PHPUnit_Framework_TestCase {
 	public function test_allAnonymousSessions() {
 		$this->mockLogger->shouldReceive("pushHandler");
 		$this->mockDB->shouldReceive("query")->with("SELECT * FROM usr_session WHERE user_id = 13");
-		$this->mockDB->shouldReceive("fetchAssoc")->once;
-		$this->mockDB->shouldReceive("manipulateF")->once;
+		$this->mockDB->shouldReceive("fetchAssoc")->times(1);
 
 		$this->DBAccess = new cleanUpSessionsDBAccess($this->mockDIC, $this->mockDB, $this->mockLogger, $this->mockStreamHandler);
 		$this->DBAccess->allAnonymousSessions();
@@ -64,8 +65,8 @@ class DBAccessTest extends PHPUnit_Framework_TestCase {
 		$this->mockLogger->shouldReceive("pushHandler");
 		$this->mockDB->shouldReceive("query")->with("SELECT expiration FROM clean_ses_cron");
 		$this->mockDB->shouldReceive("query")->with("SELECT * FROM usr_session WHERE user_id = 13 AND ctime < %s");
-		$this->mockDB->shouldReceive("fetchAssoc")->once;
-		$this->mockDB->shouldReceive("queryF")->once;
+		$this->mockDB->shouldReceive("fetchAssoc")->times(2);
+		$this->mockDB->shouldReceive("queryF")->times(1);
 
 		$this->DBAccess = new cleanUpSessionsDBAccess($this->mockDIC, $this->mockDB, $this->mockLogger, $this->mockStreamHandler);
 		$this->DBAccess->expiredAnonymousUsers();
@@ -75,7 +76,7 @@ class DBAccessTest extends PHPUnit_Framework_TestCase {
 	public function test_getExpirationValue() {
 		$this->mockLogger->shouldReceive("pushHandler");
 		$this->mockDB->shouldReceive("query")->with("SELECT expiration FROM clean_ses_cron");
-		$this->mockDB->shouldReceive("fetchAssoc")->once;
+		$this->mockDB->shouldReceive("fetchAssoc")->times(1);
 
 		$this->DBAccess = new cleanUpSessionsDBAccess($this->mockDIC, $this->mockDB, $this->mockLogger, $this->mockStreamHandler);
 		$this->DBAccess->getExpirationValue();

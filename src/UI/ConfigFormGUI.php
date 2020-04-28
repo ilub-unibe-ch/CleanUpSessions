@@ -21,7 +21,7 @@ class ConfigFormGUI extends ilPropertyFormGUI {
 	 */
 	protected $parent_gui;
 	/**
-	 * @var ICleanUpSessions
+	 * @var ilCleanUpSessionsConfigGUI
 	 */
 	protected $config;
 	/**

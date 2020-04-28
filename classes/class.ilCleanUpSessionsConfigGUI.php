@@ -38,12 +38,10 @@ class ilCleanUpSessionsConfigGUI extends ilPluginConfigGUI {
 
 	}
 
-
-
-
-	/**
-	 * Creates a new ConfigFormGUI and sets the Content
-	 */
+    /**
+     * Creates a new ConfigFormGUI and sets the Content
+     * @throws Exception
+     */
 	protected function index() {
 
 		$form = new ConfigFormGUI($this, $this->DIC);
@@ -90,17 +88,20 @@ class ilCleanUpSessionsConfigGUI extends ilPluginConfigGUI {
 	protected function initTabs() {
 		$this->DIC->tabs()->activateTab(self::TAB_PLUGIN_CONFIG);
 	}
-	/**
-	 *
-	 */
-	protected function cancel() {
+
+    /**
+     * @throws Exception
+     */
+    protected function cancel() {
 		$this->index();
 	}
 
-	/**
-	 * @inheritdoc
-	 * @param string $cmd
-	 */
+    /**
+     * @inheritdoc
+     * @param string $cmd
+     * @throws Exception
+     * @throws Exception
+     */
 	public function performCommand($cmd) {
 
 			switch ($cmd) {
