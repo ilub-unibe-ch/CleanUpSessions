@@ -1,12 +1,13 @@
 <?php
-
+declare(strict_types=1);
 namespace iLUB\Plugins\CleanUpSessions\UI;
 
 use ilCleanUpSessionsConfigGUI;
 use ilCleanUpSessionsPlugin;
 use ilPropertyFormGUI;
 use ilTextInputGUI;
-use iLUB\Plugins\CleanUpSessions\Helper\cleanUpSessionsDBAccess;
+use iLUB\Plugins\CleanUpSessions\Helper\CleanUpSessionsDBAccess;
+use ILIAS\DI\Container;
 
 /**
  * Class ConfigFOrmGUI
@@ -16,36 +17,17 @@ use iLUB\Plugins\CleanUpSessions\Helper\cleanUpSessionsDBAccess;
  */
 class ConfigFormGUI extends ilPropertyFormGUI {
 
-	/**
-	 * @var ilCleanUpSessionsConfigGUI
-	 */
-	protected $parent_gui;
-	/**
-	 * @var ilCleanUpSessionsConfigGUI
-	 */
-	protected $config;
-	/**
-	 * @var ilCleanUpSessionsPlugin
-	 */
-	protected $pl;
-	/**
-	 * @var cleanUpSessionsDBAccess
-	 */
-	protected $access;
-	/**
-	 * @var dic
-	 */
-	protected $DIC;
+	protected ilCleanUpSessionsConfigGUI $parent_gui;
+	protected ilCleanUpSessionsConfigGUI $config;
+	protected ilCleanUpSessionsPlugin $pl;
+	protected cleanUpSessionsDBAccess $access;
+	protected Container $DIC;
 
 
 	/**
-	 * ConfigFormGUI constructor.
-	 *
-	 * @param $parent_gui
-	 * @param $dic
 	 * @throws \Exception
 	 */
-	public function __construct($parent_gui, $dic) {
+	public function __construct(ilCleanUpSessionsConfigGUI $parent_gui, Container $dic) {
 		$this->DIC = $dic;
 		$this->parent_gui = $parent_gui;
 		$this->access = new cleanUpSessionsDBAccess($this->DIC);
@@ -58,10 +40,7 @@ class ConfigFormGUI extends ilPropertyFormGUI {
 	}
 
 
-	/**
-	 *
-	 */
-	protected function initForm() {
+	protected function initForm(): void  {
 		$this->setTitle($this->pl->txt('admin_form_title'));
 
 		$item = new ilTextInputGUI($this->pl->txt('expiration_threshold'), ilCleanUpSessionsPlugin::EXPIRATION_THRESHOLD);

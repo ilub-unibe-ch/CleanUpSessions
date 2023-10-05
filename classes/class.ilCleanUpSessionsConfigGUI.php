@@ -1,13 +1,13 @@
 <?php
-
-require_once __DIR__ . "/../vendor/autoload.php";
+declare(strict_types=1);
 
 use iLUB\Plugins\CleanUpSessions\UI\ConfigFormGUI;
 use iLUB\Plugins\CleanUpSessions\Helper\CleanUpSessionsDBAccess;
+use ILIAS\DI\Container;
 
 /**
  * Class ilCleanUpSessionsConfigGUI
- *  * @ilCtrl_IsCalledBy   ilObjComponentSettingsGUI
+ *  * @ilCtrl_IsCalledBy   ilCleanUpSessionsConfigGUI: ilObjComponentSettingsGUI
  */
 class ilCleanUpSessionsConfigGUI extends ilPluginConfigGUI {
 	const TAB_PLUGIN_CONFIG = 'tab_plugin_config';
@@ -16,15 +16,9 @@ class ilCleanUpSessionsConfigGUI extends ilPluginConfigGUI {
 	const CMD_SAVE_CONFIG = 'saveConfig';
 	const CMD_CANCEL = 'cancel';
 
-	/**
-	 * @var ilCleanUpSessionsPlugin
-	 */
-	protected $pl;
-
-	/**
-	 * @var $DIC
-	 */
-	protected $DIC;
+	protected ilCleanUpSessionsPlugin $pl;
+	protected Container $DIC;
+    protected ilGlobalTemplateInterface  $tpl;
 
 
 	/**
@@ -35,6 +29,7 @@ class ilCleanUpSessionsConfigGUI extends ilPluginConfigGUI {
 		global $DIC;
 		$this->DIC = $DIC;
 		$this->pl = ilCleanUpSessionsPlugin::getInstance();
+        $this->tpl = $DIC->ui()->mainTemplate();
 
 	}
 
@@ -42,7 +37,7 @@ class ilCleanUpSessionsConfigGUI extends ilPluginConfigGUI {
      * Creates a new ConfigFormGUI and sets the Content
      * @throws Exception
      */
-	protected function index() {
+	protected function index(): void{
 
 		$form = new ConfigFormGUI($this, $this->DIC);
 		$tpl = $this->DIC->ui()->mainTemplate();
@@ -55,12 +50,12 @@ class ilCleanUpSessionsConfigGUI extends ilPluginConfigGUI {
 	 *
 	 * @throws Exception
 	 */
-	protected function saveConfig() {
+	protected function saveConfig(): void {
 		$form = new ConfigFormGUI($this, $this->DIC);
 		if ($form->checkInput()) {
-			$this->checkAndUpdate($form->getInput(ilCleanUpSessionsPlugin::EXPIRATION_THRESHOLD));
+			$this->checkAndUpdate((int)$form->getInput(ilCleanUpSessionsPlugin::EXPIRATION_THRESHOLD));
 		} else {
-			ilUtil::sendFailure($this->pl->txt('msg_failed_save'), true);
+            $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_FAILURE, $this->pl->txt('msg_failed_save'), true);
 		}
 		$this->DIC->ctrl()->redirect($this);
 	}
@@ -72,37 +67,36 @@ class ilCleanUpSessionsConfigGUI extends ilPluginConfigGUI {
 	 * @param int $expiration_value
 	 * @throws Exception
 	 */
-	protected function checkAndUpdate($expiration_value) {
+	protected function checkAndUpdate(int $expiration_value): void {
 		$access = new CleanUpSessionsDBAccess($this->DIC);
-		if (is_numeric($expiration_value) && (int)$expiration_value > 0) {
+		if (is_numeric($expiration_value) && $expiration_value > 0) {
 			$access->updateExpirationValue($expiration_value);
-			ilUtil::sendSuccess($this->pl->txt('msg_successfully_saved'), true);
+            $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->pl->txt('rep_added_to_favourites'), true);
 		} else {
-			ilUtil::sendFailure($this->pl->txt('msg_not_valid_expiration_input'), true);
+            $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_FAILURE, $this->pl->txt('msg_not_valid_expiration_input'), true);
 		}
 	}
 
 	/**
 	 *
 	 */
-	protected function initTabs() {
+	protected function initTabs(): void {
 		$this->DIC->tabs()->activateTab(self::TAB_PLUGIN_CONFIG);
 	}
 
     /**
      * @throws Exception
      */
-    protected function cancel() {
+    protected function cancel(): void {
 		$this->index();
 	}
 
     /**
      * @inheritdoc
-     * @param string $cmd
      * @throws Exception
      * @throws Exception
      */
-	public function performCommand($cmd) {
+	public function performCommand(string $cmd): void {
 
 			switch ($cmd) {
 				case 'configure':

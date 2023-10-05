@@ -1,6 +1,5 @@
 <?php
-
-require_once __DIR__ . "/../vendor/autoload.php";
+declare(strict_types=1);
 
 use iLUB\Plugins\CleanUpSessions\Helper\cleanUpSessionsDBAccess;
 use iLUB\Plugins\CleanUpSessions\Jobs\RunSync;
@@ -21,30 +20,20 @@ class ilCleanUpSessionsPlugin extends ilCronHookPlugin {
 	# const IL_PLUGIN_TABLE = 'il_plugin';
 	const LOG_DESTINATION = '/var/log/ilias/CleanUpSessions.log';
 
-	/**
-	 * @var ilCleanUpSessionsPlugin
-	 */
-	protected static $instance;
-	/**
-	 * @var $this ->access
-	 */
-	protected $access;
+	protected static ilCleanUpSessionsPlugin $instance;
+	protected cleanUpSessionsDBAccess $access;
 
 
-	/**
-	 * @return string
-	 */
 	public function getPluginName(): string {
 		return self::PLUGIN_NAME;
 	}
 
-
-	/**
-	 * @return ilCleanUpSessionsPlugin
-	 */
 	public static function getInstance(): ilCleanUpSessionsPlugin {
-		if (self::$instance === NULL) {
-			self::$instance = new self();
+        if (!isset(self::$instance)) {
+            global $DIC;
+
+            $component_repository = $DIC["component.repository"] ;
+			self::$instance = new self($DIC->database(), $component_repository, 'clean_ses');
 		}
 
 		return self::$instance;
@@ -59,11 +48,7 @@ class ilCleanUpSessionsPlugin extends ilCronHookPlugin {
 	}
 
 
-	/**
-	 * @param string $a_job_id
-	 * @return ilCronJob
-	 */
-	public function getCronJobInstance($a_job_id): ilCronJob {
+	public function getCronJobInstance(string $a_job_id): ilCronJob {
 		$a_job_id = "\iLUB\Plugins\CleanUpSessions\Jobs\RunSync";
 		return new $a_job_id();
 	}
@@ -72,7 +57,7 @@ class ilCleanUpSessionsPlugin extends ilCronHookPlugin {
      * AfterUninstall deletes the tables from the DB
      * @throws Exception
      */
-	protected function afterUninstall() {
+	protected function afterUninstall(): void {
 		$this->access = new cleanUpSessionsDBAccess();
 		$this->access->removePluginTableFromDB();
 	}

@@ -1,11 +1,6 @@
 <?php
 
 
-require_once __DIR__ . "/../vendor/autoload.php";
-
-
-
-
 use  iLUB\Plugins\CleanUpSessions\Helper\cleanUpSessionsDBAccess;
 use PHPUnit\Framework\TestCase;
 

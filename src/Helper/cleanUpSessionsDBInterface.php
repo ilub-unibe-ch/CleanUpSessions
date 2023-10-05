@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 
 
 namespace iLUB\Plugins\CleanUpSessions\Helper;
@@ -12,25 +12,19 @@ interface CleanUpSessionsDBInterface {
 	/**
 	 * Logs all anonymous sessions to the log ilCleanUpSessionsPlugin::LOG_DESTINATION and returns the number of
 	 * all active anonymous sessions
-	 *
-	 * @return int
 	 */
-	public function allAnonymousSessions();
+	public function allAnonymousSessions(): int;
 
 	/**
 	 * Logs all expired anonymous sessions to the log ilCleanUpSessionsPlugin::LOG_DESTINATION and returns the number of
 	 * all expired anonymous sessions
-	 *
-	 * @return int
 	 */
-	public function expiredAnonymousUsers();
+	public function expiredAnonymousUsers(): int;
 
 	/**
 	 * Returns the set expiration threshold set in the config
-	 *
-	 * @return mixed
 	 */
-	public function getExpirationValue();
+	public function getExpirationValue(): string;
 
 	/**
 	 * Delets all the expired anonymous sessions from the DB and logs the
@@ -41,17 +35,15 @@ interface CleanUpSessionsDBInterface {
 	/**
 	 * Returns the latest value in unix system time format, that is considered non-expired. All values
 	 * below the returned one are considered expired.
-	 *
-	 * @return float|int
 	 */
-	public function getThresholdBoundary();
+	public function getThresholdBoundary(): int;
 
     /**
      * Updates an entry determined by id with new information
      * @param $expiration
      * @return
      */
-	public function updateExpirationValue($expiration);
+	public function updateExpirationValue(int $expiration);
 
 	/**
 	 * Removes the table from DB after uninstall is triggered.

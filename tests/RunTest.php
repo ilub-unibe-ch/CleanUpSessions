@@ -1,8 +1,5 @@
 <?php
 
-require_once __DIR__ . "/../vendor/autoload.php";
-
-
 
 use iLUB\Plugins\CleanUpSessions\Jobs\RunSync;
 use PHPUnit\Framework\TestCase;

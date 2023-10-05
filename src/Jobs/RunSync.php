@@ -1,11 +1,11 @@
 <?php
-
+declare(strict_types=1);
 namespace iLUB\Plugins\CleanUpSessions\Jobs;
 
 use Exception;
 use ilCronJob;
-use iLUB\Plugins\CleanUpSessions\Helper\cleanUpSessionsDBAccess;
-
+use iLUB\Plugins\CleanUpSessions\Helper\CleanUpSessionsDBAccess;
+use ILIAS\DI\Container;
 
 /**
  * Class RunSync
@@ -17,101 +17,61 @@ use iLUB\Plugins\CleanUpSessions\Helper\cleanUpSessionsDBAccess;
 class RunSync extends AbstractJob {
 
 
-	/**
-	 * @var
-	 */
-	protected $dic;
+	protected Container $dic;
+
+	protected \ilCronJobResult$job_result;
+	protected cleanUpSessionsDBAccess $db_access;
 
     /**
-     * @var \ilCronJobResult
-     */
-	protected $job_result;
-	protected $db_access;
-
-    /**
-     * RunSync constructor.
-     * @param \ilCronJobResult|null        $job_result
-     * @param cleanUpSessionsDBAccess|null $db_access
      * @throws Exception
      */
-    public function __construct(\ilCronJobResult $job_result =null, cleanUpSessionsDBAccess $db_access=null) {
-        $this->job_result = $job_result;
-        if($this->job_result == null){
+    public function __construct(?\ilCronJobResult $job_result = null, cleanUpSessionsDBAccess $db_access = null) {
+        if($job_result == null){
             $this->job_result = new \ilCronJobResult();
+        }else {
+            $this->job_result = $job_result;
         }
-        $this->db_access = $db_access;
-        if($this->db_access == null){
+        if($db_access == null){
             $this->db_access = new cleanUpSessionsDBAccess();
+        }else {
+            $this->db_access = $db_access;
         }
     }
 
-	/**
-	 * @return string
-	 */
-	public function getId() {
+
+	public function getId(): string {
 		return get_class($this);
 	}
 
-
-	/**
-	 * @return bool
-	 */
-	public function hasAutoActivation() {
+	public function hasAutoActivation(): bool {
 		return true;
 	}
 
-	/**
-	 * @return bool
-	 */
-	public function hasFlexibleSchedule() {
+	public function hasFlexibleSchedule(): bool {
 		return true;
 	}
 
-	/**
-	 * @return int
-	 */
-	public function getDefaultScheduleType() {
+	public function getDefaultScheduleType(): int {
 		return ilCronJob::SCHEDULE_TYPE_DAILY;
 	}
 
-	/**
-	 * @return null
-	 */
-	public function getDefaultScheduleValue() {
+	public function getDefaultScheduleValue(): int {
 		return 1;
 	}
 
-
-	/**
-	 * @return \ilCronJobResult
-	 */
-	public function getJobResult() {
-
+	public function getJobResult(): \ilCronJobResult {
 		return $this->job_result;
-
 	}
 
-	/**
-	 * @return cleanUpSessionsDBAccess
-	 */
-	public function getDBAccess() {
-
+	public function getDBAccess(): cleanUpSessionsDBAccess {
 		return $this->db_access;
 	}
 
-	/**
-	 * @return \ilCronJobResult
-	 * @throws
-	 */
-	public function run() {
-
+	public function run(): \ilCronJobResult {
 		$jobResult = $this->getJobResult();
-
 		try {
-
 			$tc = $this->getDBAccess();
 			$tc->removeAnonymousSessionsOlderThanExpirationThreshold();
-
 			$jobResult->setStatus($jobResult::STATUS_OK);
 			$jobResult->setMessage("Everything worked fine.");
 			return $jobResult;
@@ -121,4 +81,13 @@ class RunSync extends AbstractJob {
 			return $jobResult;
 		}
 	}
+    public function getTitle() : string
+    {
+       return "CleanUpSessions Cronjob";
+    }
+
+    public function getDescription() : string
+    {
+        return "deletes old anonymous sessions";
+    }
 }
