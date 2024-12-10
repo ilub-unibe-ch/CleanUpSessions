@@ -86,7 +86,7 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface {
 		$query = $this->db->query($sql);
 		$rec = $this->db->fetchAssoc($query);
 
-		return $rec['expiration'];
+		return (string) $rec['expiration'];
 	}
 
 	/**

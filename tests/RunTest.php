@@ -11,7 +11,7 @@ class RunTest extends TestCase {
 	protected $mockDBAccess;
 
 
-	protected function setUp() {
+	protected function setUp(): void {
 
 		$this->mockDBAccess = Mockery::mock(iLUB\Plugins\CleanUpSessions\Helper\cleanUpSessionsDBAccess::class);
 		$this->mockCronJobResult = Mockery::mock(\ilCronJobResult::class);
@@ -51,7 +51,7 @@ class RunTest extends TestCase {
 
 
 
-	public function tearDown() {
+	public function tearDown() : void {
 		Mockery::close();
 	}
 

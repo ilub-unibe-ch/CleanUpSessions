@@ -6,6 +6,7 @@ use Exception;
 use ilCronJob;
 use iLUB\Plugins\CleanUpSessions\Helper\CleanUpSessionsDBAccess;
 use ILIAS\DI\Container;
+use ILIAS\Cron\Schedule\CronJobScheduleType;
 
 /**
  * Class RunSync
@@ -51,8 +52,8 @@ class RunSync extends AbstractJob {
 		return true;
 	}
 
-	public function getDefaultScheduleType(): int {
-		return ilCronJob::SCHEDULE_TYPE_DAILY;
+	public function getDefaultScheduleType(): CronJobScheduleType {
+		return CronJobScheduleType::SCHEDULE_TYPE_DAILY;
 	}
 
 	public function getDefaultScheduleValue(): int {
