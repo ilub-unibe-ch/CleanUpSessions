@@ -71,7 +71,7 @@ class ilCleanUpSessionsConfigGUI extends ilPluginConfigGUI {
 		$access = new CleanUpSessionsDBAccess($this->DIC);
 		if (is_numeric($expiration_value) && $expiration_value > 0) {
 			$access->updateExpirationValue($expiration_value);
-            $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->pl->txt('rep_added_to_favourites'), true);
+            $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->pl->txt('msg_successfully_saved'), true);
 		} else {
             $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_FAILURE, $this->pl->txt('msg_not_valid_expiration_input'), true);
 		}
