@@ -1,6 +1,5 @@
 <#1>
 <?php
-/** @var ilDB $ilDB */
 global $ilDB;
 $db = $ilDB;
 require_once('Customizing/global/plugins/Services/Cron/CronHook/CleanUpSessions/classes/class.ilCleanUpSessionsPlugin.php');

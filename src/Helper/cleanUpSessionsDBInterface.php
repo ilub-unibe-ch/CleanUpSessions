@@ -27,7 +27,7 @@ interface CleanUpSessionsDBInterface {
 	public function getExpirationValue(): string;
 
 	/**
-	 * Delets all the expired anonymous sessions from the DB and logs the
+	 * Deletes all the expired anonymous sessions from the DB and logs the
 	 * remaining non-expired anonymous sessions.
 	 */
 	public function removeAnonymousSessionsOlderThanExpirationThreshold();
@@ -40,8 +40,6 @@ interface CleanUpSessionsDBInterface {
 
     /**
      * Updates an entry determined by id with new information
-     * @param $expiration
-     * @return
      */
 	public function updateExpirationValue(int $expiration);
 

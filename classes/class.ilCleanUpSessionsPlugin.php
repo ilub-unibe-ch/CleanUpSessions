@@ -48,9 +48,9 @@ class ilCleanUpSessionsPlugin extends ilCronHookPlugin {
 	}
 
 
-	public function getCronJobInstance(string $a_job_id): ilCronJob {
-		$a_job_id = "\iLUB\Plugins\CleanUpSessions\Jobs\RunSync";
-		return new $a_job_id();
+	public function getCronJobInstance(string $jobId): ilCronJob {
+		$jobId = "\iLUB\Plugins\CleanUpSessions\Jobs\RunSync";
+		return new $jobId();
 	}
 
     /**

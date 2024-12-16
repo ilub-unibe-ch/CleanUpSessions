@@ -8,7 +8,6 @@ namespace iLUB\Plugins\CleanUpSessions\Helper;
  * This class is responsible for the interaction between the database and the plugin
  *
  */
-use \iLUB\Plugins\CleanUpSessions\Helper\CleanUpSessionsDBInterface;
 use ilCleanUpSessionsPlugin;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
@@ -28,7 +27,6 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface {
      * @param null $db_param
      * @param null $log_param
      * @param null $stream_param
-     * @throws \Exception
      */
 
 	public function __construct($dic_param = null, $db_param = null, $log_param = null, $stream_param = null) {
@@ -90,7 +88,7 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface {
 	}
 
 	/**
-	 * Delets all the expired anonymous sessions from the DB and logs the
+	 * Deletes all the expired anonymous sessions from the DB and logs the
 	 * remaining non-expired anonymous sessions.
 	 */
 	public function removeAnonymousSessionsOlderThanExpirationThreshold() {
@@ -118,7 +116,7 @@ class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface {
 		$sql = "SELECT * FROM usr_session WHERE user_id = 13";
 		$query = $this->db->query($sql);
 		$counter = 0;
-		while ($rec = $this->db->fetchAssoc($query)) {
+		while ($this->db->fetchAssoc($query)) {
 			$counter++;
 		}
 

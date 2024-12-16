@@ -69,7 +69,7 @@ class ilCleanUpSessionsConfigGUI extends ilPluginConfigGUI {
 	 */
 	protected function checkAndUpdate(int $expiration_value): void {
 		$access = new CleanUpSessionsDBAccess($this->DIC);
-		if (is_numeric($expiration_value) && $expiration_value > 0) {
+		if ($expiration_value > 0) {
 			$access->updateExpirationValue($expiration_value);
             $this->tpl->setOnScreenMessage(IlGlobalTemplateInterface::MESSAGE_TYPE_SUCCESS, $this->pl->txt('msg_successfully_saved'), true);
 		} else {
@@ -92,7 +92,6 @@ class ilCleanUpSessionsConfigGUI extends ilPluginConfigGUI {
 	}
 
     /**
-     * @inheritdoc
      * @throws Exception
      * @throws Exception
      */

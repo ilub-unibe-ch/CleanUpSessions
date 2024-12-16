@@ -2,8 +2,8 @@
 declare(strict_types=1);
 namespace iLUB\Plugins\CleanUpSessions\Jobs;
 
+use ilCronJobResult;
 use Exception;
-use ilCronJob;
 use iLUB\Plugins\CleanUpSessions\Helper\CleanUpSessionsDBAccess;
 use ILIAS\DI\Container;
 use ILIAS\Cron\Schedule\CronJobScheduleType;
@@ -20,15 +20,15 @@ class RunSync extends AbstractJob {
 
 	protected Container $dic;
 
-	protected \ilCronJobResult$job_result;
+	protected ilCronJobResult$job_result;
 	protected cleanUpSessionsDBAccess $db_access;
 
     /**
      * @throws Exception
      */
-    public function __construct(?\ilCronJobResult $job_result = null, cleanUpSessionsDBAccess $db_access = null) {
+    public function __construct(?ilCronJobResult $job_result = null, cleanUpSessionsDBAccess $db_access = null) {
         if($job_result == null){
-            $this->job_result = new \ilCronJobResult();
+            $this->job_result = new ilCronJobResult();
         }else {
             $this->job_result = $job_result;
         }
@@ -60,7 +60,7 @@ class RunSync extends AbstractJob {
 		return 1;
 	}
 
-	public function getJobResult(): \ilCronJobResult {
+	public function getJobResult(): ilCronJobResult {
 		return $this->job_result;
 	}
 
@@ -68,7 +68,7 @@ class RunSync extends AbstractJob {
 		return $this->db_access;
 	}
 
-	public function run(): \ilCronJobResult {
+	public function run(): ilCronJobResult {
 		$jobResult = $this->getJobResult();
 		try {
 			$tc = $this->getDBAccess();
