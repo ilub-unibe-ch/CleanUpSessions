@@ -14,7 +14,7 @@ use Monolog\Handler\StreamHandler;
 use ilDBInterface;
 use ILIAS\DI\Container;
 
-class CleanUpSessionsDBAccess implements cleanUpSessionsDBInterface {
+class CleanUpSessionsDBAccess implements CleanUpSessionsDBInterface {
 
 	protected ilDBInterface $db;
 	protected Logger $logger;
